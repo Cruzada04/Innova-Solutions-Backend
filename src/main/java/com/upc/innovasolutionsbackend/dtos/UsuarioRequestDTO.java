@@ -12,5 +12,5 @@ public class UsuarioRequestDTO {
     private String contrasena;
     private String metodoRegistro;
     private Long rolId;
-    private Long planId;
+    private Long planSuscripcionId;
 }
