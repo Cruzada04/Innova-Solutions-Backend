@@ -1,0 +1,55 @@
+package com.upc.innovasolutionsbackend.controladores;
+
+import com.upc.innovasolutionsbackend.dtos.FlashcardRequestDTO;
+import com.upc.innovasolutionsbackend.dtos.FlashcardResponseDTO;
+import com.upc.innovasolutionsbackend.entidades.Flashcard;
+import com.upc.innovasolutionsbackend.servicios.FlashcardService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/flashcards")
+public class FlashcardController {
+    @Autowired
+    private FlashcardService flashcardService;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @PostMapping
+    public FlashcardResponseDTO insertar(@RequestBody FlashcardRequestDTO flashcardRequestDTO) {
+        Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
+        flashcard = flashcardService.insertar(flashcard);
+        return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+    }
+
+    @GetMapping
+    public List<FlashcardResponseDTO> listar() {
+        return flashcardService.listar().stream()
+                .map(flashcard -> modelMapper.map(flashcard, FlashcardResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public FlashcardResponseDTO listarPorId(@PathVariable Long id) {
+        Flashcard flashcard = flashcardService.listarPorId(id);
+        return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+    }
+
+    @PutMapping("/{id}")
+    public FlashcardResponseDTO actualizar(@PathVariable Long id, @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
+        Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
+        flashcard.setId(id);
+        flashcard = flashcardService.actualizar(flashcard);
+        return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id) {
+        flashcardService.eliminar(id);
+    }
+}
