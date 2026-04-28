@@ -1,24 +1,24 @@
 # Innova-Solutions-Backend
 
-## Project Overview
-**InnovaSolutions** is an innovative platform developed by students from the UPC Faculty of Engineering. Our mission is to enhance the learning process for children under 10 years old with autism through a didactic, easy-to-use platform.
+## Descripción del Proyecto
+**InnovaSolutions** es una plataforma innovadora desarrollada por estudiantes de la Facultad de Ingeniería de la UPC. Nuestro compromiso se centra en abordar las necesidades de una parte significativa y desatendida de la sociedad: los niños de la comunidad autista que enfrentan desafíos constantes en su proceso educativo diario.
 
-## Key Features
-- **AI-Powered Flashcards:** Automatically generates visually engaging content adapted to the specific needs of each child.
-- **Adaptive Learning:** Simplifies the teaching and learning process for both children and educators.
-- **Personalized Experience:** Focuses on the unique learning requirements of the autistic community.
+## Características Principales
+- **Flashcards potenciadas por IA:** Genera contenido visualmente atractivo y adaptado a las necesidades específicas de cada niño.
+- **Aprendizaje Adaptativo:** Simplifica tanto el proceso de enseñanza como el de aprendizaje para el niño y el docente.
+- **Experiencia Personalizada:** Se enfoca en los requerimientos únicos de aprendizaje de la comunidad autista.
 
-## Mission
-To facilitate learning for children with autism using generative artificial intelligence and interactive educational tools.
+## Misión
+Facilitar el proceso de aprendizaje de niños menores de 10 años que padecen autismo a través de una plataforma didáctica de fácil uso, utilizando reconocidas "Flashcards" potenciadas por un sistema generativo de inteligencia artificial.
 
-## Vision
-To become global leaders in specialized education for children with autism, transforming lives through innovative learning techniques.
+## Visión
+Nos proyectamos como líderes globales en el ámbito de la educación para niños autistas menores de 10 años, transformando sus vidas a través de la implementación de técnicas de aprendizaje innovadoras.
 
-## Getting Started
-1. Clone the repository.
-2. Install dependencies.
-3. Configure environment variables.
-4. Run the development server.
+## Empezando
+1. Clonar el repositorio.
+2. Instalar las dependencias.
+3. Configurar las variables de entorno.
+4. Ejecutar el servidor de desarrollo.
 
 ---
-*Developed by Grupo 06 - Arquitectura de Aplicaciones Web*
+*Desarrollado por el Grupo 06 - Curso: Arquitectura de Aplicaciones Web*
