@@ -1,0 +1,41 @@
+package com.upc.innovasolutionsbackend.servicios;
+
+import com.upc.innovasolutionsbackend.entidades.Flashcard;
+import com.upc.innovasolutionsbackend.repositorios.FlashcardRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class FlashcardService {
+    @Autowired
+    private FlashcardRepositorio flashcardRepositorio;
+
+    @Transactional
+    public Flashcard insertar(Flashcard flashcard) {
+        return flashcardRepositorio.save(flashcard);
+    }
+
+    public List<Flashcard> listar() {
+        return flashcardRepositorio.findAll();
+    }
+
+    public Flashcard listarPorId(Long id) {
+        return flashcardRepositorio.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public Flashcard actualizar(Flashcard flashcard) {
+        if (flashcardRepositorio.existsById(flashcard.getId())) {
+            return flashcardRepositorio.save(flashcard);
+        }
+        return null;
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        flashcardRepositorio.deleteById(id);
+    }
+}
