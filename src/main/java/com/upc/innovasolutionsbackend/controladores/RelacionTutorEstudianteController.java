@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.RelacionTutorEstudianteRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.RelacionTutorEstudianteResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.RelacionTutorEstudiante;
 import com.upc.innovasolutionsbackend.servicios.RelacionTutorEstudianteService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class RelacionTutorEstudianteController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public RelacionTutorEstudianteResponseDTO insertar(@RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public RelacionTutorEstudianteResponseDTO insertar(@Valid @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
         RelacionTutorEstudiante relacion = modelMapper.map(relacionRequestDTO, RelacionTutorEstudiante.class);
         relacion = relacionService.insertar(relacion);
         return modelMapper.map(relacion, RelacionTutorEstudianteResponseDTO.class);
@@ -41,7 +43,8 @@ public class RelacionTutorEstudianteController {
     }
 
     @PutMapping("/{id}")
-    public RelacionTutorEstudianteResponseDTO actualizar(@PathVariable Long id, @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public RelacionTutorEstudianteResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
         RelacionTutorEstudiante relacion = modelMapper.map(relacionRequestDTO, RelacionTutorEstudiante.class);
         relacion.setId(id);
         relacion = relacionService.actualizar(relacion);
