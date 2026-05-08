@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.OpcionRespuesta;
 import com.upc.innovasolutionsbackend.servicios.OpcionRespuestaService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class OpcionRespuestaController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public OpcionRespuestaResponseDTO insertar(@RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public OpcionRespuestaResponseDTO insertar(@Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
         OpcionRespuesta opcion = modelMapper.map(opcionRequestDTO, OpcionRespuesta.class);
         opcion = opcionService.insertar(opcion);
         return modelMapper.map(opcion, OpcionRespuestaResponseDTO.class);
@@ -41,7 +43,8 @@ public class OpcionRespuestaController {
     }
 
     @PutMapping("/{id}")
-    public OpcionRespuestaResponseDTO actualizar(@PathVariable Long id, @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public OpcionRespuestaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
         OpcionRespuesta opcion = modelMapper.map(opcionRequestDTO, OpcionRespuesta.class);
         opcion.setId(id);
         opcion = opcionService.actualizar(opcion);
