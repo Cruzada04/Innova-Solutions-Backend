@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.ConfiguracionRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.ConfiguracionResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Configuracion;
 import com.upc.innovasolutionsbackend.servicios.ConfiguracionService;
+import jakarta.validation.Valid; // Importación necesaria para activar validaciones
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class ConfiguracionController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ConfiguracionResponseDTO insertar(@RequestBody ConfiguracionRequestDTO configuracionRequestDTO) {
+    // Se agrega @Valid para que Spring valide el DTO antes de ejecutar el método
+    public ConfiguracionResponseDTO insertar(@Valid @RequestBody ConfiguracionRequestDTO configuracionRequestDTO) {
         Configuracion configuracion = modelMapper.map(configuracionRequestDTO, Configuracion.class);
         configuracion = configuracionService.insertar(configuracion);
         return modelMapper.map(configuracion, ConfiguracionResponseDTO.class);
@@ -41,7 +43,8 @@ public class ConfiguracionController {
     }
 
     @PutMapping("/{id}")
-    public ConfiguracionResponseDTO actualizar(@PathVariable Long id, @RequestBody ConfiguracionRequestDTO configuracionRequestDTO) {
+    // Se agrega @Valid también en la actualización para mantener la integridad de los datos
+    public ConfiguracionResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody ConfiguracionRequestDTO configuracionRequestDTO) {
         Configuracion configuracion = modelMapper.map(configuracionRequestDTO, Configuracion.class);
         configuracion.setId(id);
         configuracion = configuracionService.actualizar(configuracion);
