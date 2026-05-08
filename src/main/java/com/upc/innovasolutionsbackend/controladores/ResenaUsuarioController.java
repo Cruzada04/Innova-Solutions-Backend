@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.ResenaUsuarioRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.ResenaUsuarioResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.ResenaUsuario;
 import com.upc.innovasolutionsbackend.servicios.ResenaUsuarioService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class ResenaUsuarioController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ResenaUsuarioResponseDTO insertar(@RequestBody ResenaUsuarioRequestDTO resenaRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public ResenaUsuarioResponseDTO insertar(@Valid @RequestBody ResenaUsuarioRequestDTO resenaRequestDTO) {
         ResenaUsuario resena = modelMapper.map(resenaRequestDTO, ResenaUsuario.class);
         resena = resenaService.insertar(resena);
         return modelMapper.map(resena, ResenaUsuarioResponseDTO.class);
@@ -41,7 +43,8 @@ public class ResenaUsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResenaUsuarioResponseDTO actualizar(@PathVariable Long id, @RequestBody ResenaUsuarioRequestDTO resenaRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public ResenaUsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody ResenaUsuarioRequestDTO resenaRequestDTO) {
         ResenaUsuario resena = modelMapper.map(resenaRequestDTO, ResenaUsuario.class);
         resena.setId(id);
         resena = resenaService.actualizar(resena);
