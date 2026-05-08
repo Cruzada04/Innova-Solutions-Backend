@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.LeccionCustomRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.LeccionCustomResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.LeccionCustom;
 import com.upc.innovasolutionsbackend.servicios.LeccionCustomService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class LeccionCustomController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public LeccionCustomResponseDTO insertar(@RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
+    // Se agrega @Valid para activar las validaciones definidas en el DTO al insertar
+    public LeccionCustomResponseDTO insertar(@Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
         LeccionCustom leccion = modelMapper.map(leccionRequestDTO, LeccionCustom.class);
         leccion = leccionCustomService.insertar(leccion);
         return modelMapper.map(leccion, LeccionCustomResponseDTO.class);
@@ -41,7 +43,8 @@ public class LeccionCustomController {
     }
 
     @PutMapping("/{id}")
-    public LeccionCustomResponseDTO actualizar(@PathVariable Long id, @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public LeccionCustomResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
         LeccionCustom leccion = modelMapper.map(leccionRequestDTO, LeccionCustom.class);
         leccion.setId(id);
         leccion = leccionCustomService.actualizar(leccion);
