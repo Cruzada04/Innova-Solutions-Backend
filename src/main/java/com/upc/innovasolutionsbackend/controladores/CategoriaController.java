@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.CategoriaRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.CategoriaResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Categoria;
 import com.upc.innovasolutionsbackend.servicios.CategoriaService;
+import jakarta.validation.Valid; // 1. Importación necesaria
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,9 @@ public class CategoriaController {
     @Autowired
     private ModelMapper modelMapper;
 
+    // 2. Se agrega @Valid para activar las validaciones del DTO al insertar
     @PostMapping
-    public CategoriaResponseDTO insertar(@RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+    public CategoriaResponseDTO insertar(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
         categoria = categoriaService.insertar(categoria);
         return modelMapper.map(categoria, CategoriaResponseDTO.class);
@@ -40,8 +42,9 @@ public class CategoriaController {
         return modelMapper.map(categoria, CategoriaResponseDTO.class);
     }
 
+    // 3. Se agrega @Valid para validar los datos también al actualizar
     @PutMapping("/{id}")
-    public CategoriaResponseDTO actualizar(@PathVariable Long id, @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+    public CategoriaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
         categoria.setId(id);
         categoria = categoriaService.actualizar(categoria);
