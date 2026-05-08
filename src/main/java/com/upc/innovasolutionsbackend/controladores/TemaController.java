@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.TemaRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.TemaResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Tema;
 import com.upc.innovasolutionsbackend.servicios.TemaService;
+import jakarta.validation.Valid; // Importación necesaria
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class TemaController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public TemaResponseDTO insertar(@RequestBody TemaRequestDTO temaRequestDTO) {
+    // Se agrega @Valid para validar el DTO antes de la inserción
+    public TemaResponseDTO insertar(@Valid @RequestBody TemaRequestDTO temaRequestDTO) {
         Tema tema = modelMapper.map(temaRequestDTO, Tema.class);
         tema = temaService.insertar(tema);
         return modelMapper.map(tema, TemaResponseDTO.class);
@@ -41,7 +43,8 @@ public class TemaController {
     }
 
     @PutMapping("/{id}")
-    public TemaResponseDTO actualizar(@PathVariable Long id, @RequestBody TemaRequestDTO temaRequestDTO) {
+    // Se agrega @Valid para validar los datos actualizados
+    public TemaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody TemaRequestDTO temaRequestDTO) {
         Tema tema = modelMapper.map(temaRequestDTO, Tema.class);
         tema.setId(id);
         tema = temaService.actualizar(tema);
