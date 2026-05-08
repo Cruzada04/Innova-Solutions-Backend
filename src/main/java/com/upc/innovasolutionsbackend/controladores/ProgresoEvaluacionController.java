@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.ProgresoEvaluacionRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.ProgresoEvaluacionResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.ProgresoEvaluacion;
 import com.upc.innovasolutionsbackend.servicios.ProgresoEvaluacionService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class ProgresoEvaluacionController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ProgresoEvaluacionResponseDTO insertar(@RequestBody ProgresoEvaluacionRequestDTO progresoRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public ProgresoEvaluacionResponseDTO insertar(@Valid @RequestBody ProgresoEvaluacionRequestDTO progresoRequestDTO) {
         ProgresoEvaluacion progreso = modelMapper.map(progresoRequestDTO, ProgresoEvaluacion.class);
         progreso = progresoService.insertar(progreso);
         return modelMapper.map(progreso, ProgresoEvaluacionResponseDTO.class);
@@ -41,7 +43,8 @@ public class ProgresoEvaluacionController {
     }
 
     @PutMapping("/{id}")
-    public ProgresoEvaluacionResponseDTO actualizar(@PathVariable Long id, @RequestBody ProgresoEvaluacionRequestDTO progresoRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public ProgresoEvaluacionResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody ProgresoEvaluacionRequestDTO progresoRequestDTO) {
         ProgresoEvaluacion progreso = modelMapper.map(progresoRequestDTO, ProgresoEvaluacion.class);
         progreso.setId(id);
         progreso = progresoService.actualizar(progreso);
