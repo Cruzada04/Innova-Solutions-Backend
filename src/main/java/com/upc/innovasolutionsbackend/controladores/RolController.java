@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.RolRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.RolResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Rol;
 import com.upc.innovasolutionsbackend.servicios.RolService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class RolController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public RolResponseDTO insertar(@RequestBody RolRequestDTO rolRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public RolResponseDTO insertar(@Valid @RequestBody RolRequestDTO rolRequestDTO) {
         Rol rol = modelMapper.map(rolRequestDTO, Rol.class);
         rol = rolService.insertar(rol);
         return modelMapper.map(rol, RolResponseDTO.class);
@@ -41,7 +43,8 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
-    public RolResponseDTO actualizar(@PathVariable Long id, @RequestBody RolRequestDTO rolRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public RolResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody RolRequestDTO rolRequestDTO) {
         Rol rol = modelMapper.map(rolRequestDTO, Rol.class);
         rol.setId(id);
         rol = rolService.actualizar(rol);
