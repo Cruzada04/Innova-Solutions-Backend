@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.PlanSuscripcionRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.PlanSuscripcionResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.PlanSuscripcion;
 import com.upc.innovasolutionsbackend.servicios.PlanSuscripcionService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class PlanSuscripcionController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public PlanSuscripcionResponseDTO insertar(@RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public PlanSuscripcionResponseDTO insertar(@Valid @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
         PlanSuscripcion plan = modelMapper.map(planRequestDTO, PlanSuscripcion.class);
         plan = planService.insertar(plan);
         return modelMapper.map(plan, PlanSuscripcionResponseDTO.class);
@@ -41,7 +43,8 @@ public class PlanSuscripcionController {
     }
 
     @PutMapping("/{id}")
-    public PlanSuscripcionResponseDTO actualizar(@PathVariable Long id, @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public PlanSuscripcionResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
         PlanSuscripcion plan = modelMapper.map(planRequestDTO, PlanSuscripcion.class);
         plan.setId(id);
         plan = planService.actualizar(plan);
