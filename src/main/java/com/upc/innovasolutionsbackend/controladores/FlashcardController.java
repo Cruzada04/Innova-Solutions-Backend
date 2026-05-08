@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.FlashcardRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.FlashcardResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Flashcard;
 import com.upc.innovasolutionsbackend.servicios.FlashcardService;
+import jakarta.validation.Valid; //
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class FlashcardController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public FlashcardResponseDTO insertar(@RequestBody FlashcardRequestDTO flashcardRequestDTO) {
+    // Se agrega @Valid para activar las validaciones definidas en FlashcardRequestDTO
+    public FlashcardResponseDTO insertar(@Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard = flashcardService.insertar(flashcard);
         return modelMapper.map(flashcard, FlashcardResponseDTO.class);
@@ -41,7 +43,8 @@ public class FlashcardController {
     }
 
     @PutMapping("/{id}")
-    public FlashcardResponseDTO actualizar(@PathVariable Long id, @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también cumplan con las reglas
+    public FlashcardResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard.setId(id);
         flashcard = flashcardService.actualizar(flashcard);
