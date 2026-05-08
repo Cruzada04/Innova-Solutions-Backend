@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.UsuarioRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.UsuarioResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Usuario;
 import com.upc.innovasolutionsbackend.servicios.UsuarioService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class UsuarioController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public UsuarioResponseDTO insertar(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+    // Se agrega @Valid para validar datos críticos como el email y la contraseña al crear
+    public UsuarioResponseDTO insertar(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario = usuarioService.insertar(usuario);
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
@@ -41,7 +43,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public UsuarioResponseDTO actualizar(@PathVariable Long id, @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+    // Se agrega @Valid para asegurar que las actualizaciones mantengan la integridad de los datos
+    public UsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario.setId(id);
         usuario = usuarioService.actualizar(usuario);
