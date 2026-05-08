@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.PerfilAprendizajeRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.PerfilAprendizajeResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.PerfilAprendizaje;
 import com.upc.innovasolutionsbackend.servicios.PerfilAprendizajeService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class PerfilAprendizajeController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public PerfilAprendizajeResponseDTO insertar(@RequestBody PerfilAprendizajeRequestDTO perfilRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public PerfilAprendizajeResponseDTO insertar(@Valid @RequestBody PerfilAprendizajeRequestDTO perfilRequestDTO) {
         PerfilAprendizaje perfil = modelMapper.map(perfilRequestDTO, PerfilAprendizaje.class);
         perfil = perfilService.insertar(perfil);
         return modelMapper.map(perfil, PerfilAprendizajeResponseDTO.class);
@@ -41,7 +43,8 @@ public class PerfilAprendizajeController {
     }
 
     @PutMapping("/{id}")
-    public PerfilAprendizajeResponseDTO actualizar(@PathVariable Long id, @RequestBody PerfilAprendizajeRequestDTO perfilRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public PerfilAprendizajeResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody PerfilAprendizajeRequestDTO perfilRequestDTO) {
         PerfilAprendizaje perfil = modelMapper.map(perfilRequestDTO, PerfilAprendizaje.class);
         perfil.setId(id);
         perfil = perfilService.actualizar(perfil);
