@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.dtos.ElementoGuardadoRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.ElementoGuardadoResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.ElementoGuardado;
 import com.upc.innovasolutionsbackend.servicios.ElementoGuardadoService;
+import jakarta.validation.Valid; // Importación necesaria para activar la validación
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class ElementoGuardadoController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ElementoGuardadoResponseDTO insertar(@RequestBody ElementoGuardadoRequestDTO elementoRequestDTO) {
+    // Se agrega @Valid para validar el DTO al momento de la creación
+    public ElementoGuardadoResponseDTO insertar(@Valid @RequestBody ElementoGuardadoRequestDTO elementoRequestDTO) {
         ElementoGuardado elemento = modelMapper.map(elementoRequestDTO, ElementoGuardado.class);
         elemento = elementoService.insertar(elemento);
         return modelMapper.map(elemento, ElementoGuardadoResponseDTO.class);
@@ -41,7 +43,8 @@ public class ElementoGuardadoController {
     }
 
     @PutMapping("/{id}")
-    public ElementoGuardadoResponseDTO actualizar(@PathVariable Long id, @RequestBody ElementoGuardadoRequestDTO elementoRequestDTO) {
+    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    public ElementoGuardadoResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody ElementoGuardadoRequestDTO elementoRequestDTO) {
         ElementoGuardado elemento = modelMapper.map(elementoRequestDTO, ElementoGuardado.class);
         elemento.setId(id);
         elemento = elementoService.actualizar(elemento);
