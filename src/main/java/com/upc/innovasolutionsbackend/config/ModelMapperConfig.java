@@ -2,6 +2,7 @@ package com.upc.innovasolutionsbackend.config;
 
 import com.upc.innovasolutionsbackend.dtos.*;
 import com.upc.innovasolutionsbackend.entidades.*;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -14,144 +15,108 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        // Converters
+        Converter<Long, Rol> idToRol = ctx -> {
+            if (ctx.getSource() == null) return null;
+            Rol entity = new Rol();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+        Converter<Long, PlanSuscripcion> idToPlanSuscripcion = ctx -> {
+            if (ctx.getSource() == null) return null;
+            PlanSuscripcion entity = new PlanSuscripcion();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+        Converter<Long, Categoria> idToCategoria = ctx -> {
+            if (ctx.getSource() == null) return null;
+            Categoria entity = new Categoria();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+        Converter<Long, Usuario> idToUsuario = ctx -> {
+            if (ctx.getSource() == null) return null;
+            Usuario entity = new Usuario();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+        Converter<Long, Tema> idToTema = ctx -> {
+            if (ctx.getSource() == null) return null;
+            Tema entity = new Tema();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+        Converter<Long, LeccionCustom> idToLeccionCustom = ctx -> {
+            if (ctx.getSource() == null) return null;
+            LeccionCustom entity = new LeccionCustom();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+        Converter<Long, Flashcard> idToFlashcard = ctx -> {
+            if (ctx.getSource() == null) return null;
+            Flashcard entity = new Flashcard();
+            entity.setId(ctx.getSource());
+            return entity;
+        };
+
         // Mapeo explícito para Usuario
         modelMapper.typeMap(UsuarioRequestDTO.class, Usuario.class).addMappings(mapper -> {
-            mapper.map(UsuarioRequestDTO::getRolId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getRol() == null) dest.setRol(new Rol());
-                    dest.getRol().setId((Long) v);
-                }
-            });
-            mapper.map(UsuarioRequestDTO::getPlanSuscripcionId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getPlanSuscripcion() == null) dest.setPlanSuscripcion(new PlanSuscripcion());
-                    dest.getPlanSuscripcion().setId((Long) v);
-                }
-            });
+            mapper.using(idToRol).map(UsuarioRequestDTO::getRolId, Usuario::setRol);
+            mapper.using(idToPlanSuscripcion).map(UsuarioRequestDTO::getPlanSuscripcionId, Usuario::setPlanSuscripcion);
         });
 
         // Mapeo explícito para Tema
         modelMapper.typeMap(TemaRequestDTO.class, Tema.class).addMappings(mapper -> {
-            mapper.map(TemaRequestDTO::getCategoriaId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getCategoria() == null) dest.setCategoria(new Categoria());
-                    dest.getCategoria().setId((Long) v);
-                }
-            });
+            mapper.using(idToCategoria).map(TemaRequestDTO::getCategoriaId, Tema::setCategoria);
         });
 
         // Mapeo explícito para ResenaUsuario
         modelMapper.typeMap(ResenaUsuarioRequestDTO.class, ResenaUsuario.class).addMappings(mapper -> {
-            mapper.map(ResenaUsuarioRequestDTO::getUsuarioId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getUsuario() == null) dest.setUsuario(new Usuario());
-                    dest.getUsuario().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(ResenaUsuarioRequestDTO::getUsuarioId, ResenaUsuario::setUsuario);
         });
 
         // Mapeo explícito para RelacionTutorEstudiante
         modelMapper.typeMap(RelacionTutorEstudianteRequestDTO.class, RelacionTutorEstudiante.class).addMappings(mapper -> {
-            mapper.map(RelacionTutorEstudianteRequestDTO::getTutorId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getTutor() == null) dest.setTutor(new Usuario());
-                    dest.getTutor().setId((Long) v);
-                }
-            });
-            mapper.map(RelacionTutorEstudianteRequestDTO::getEstudianteId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getEstudiante() == null) dest.setEstudiante(new Usuario());
-                    dest.getEstudiante().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(RelacionTutorEstudianteRequestDTO::getTutorId, RelacionTutorEstudiante::setTutor);
+            mapper.using(idToUsuario).map(RelacionTutorEstudianteRequestDTO::getEstudianteId, RelacionTutorEstudiante::setEstudiante);
         });
 
         // Mapeo explícito para ProgresoEvaluacion
         modelMapper.typeMap(ProgresoEvaluacionRequestDTO.class, ProgresoEvaluacion.class).addMappings(mapper -> {
-            mapper.map(ProgresoEvaluacionRequestDTO::getEstudianteId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getEstudiante() == null) dest.setEstudiante(new Usuario());
-                    dest.getEstudiante().setId((Long) v);
-                }
-            });
-            mapper.map(ProgresoEvaluacionRequestDTO::getLeccionId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getLeccion() == null) dest.setLeccion(new LeccionCustom());
-                    dest.getLeccion().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(ProgresoEvaluacionRequestDTO::getEstudianteId, ProgresoEvaluacion::setEstudiante);
+            mapper.using(idToLeccionCustom).map(ProgresoEvaluacionRequestDTO::getLeccionId, ProgresoEvaluacion::setLeccion);
         });
 
         // Mapeo explícito para PerfilAprendizaje
         modelMapper.typeMap(PerfilAprendizajeRequestDTO.class, PerfilAprendizaje.class).addMappings(mapper -> {
-            mapper.map(PerfilAprendizajeRequestDTO::getEstudianteId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getEstudiante() == null) dest.setEstudiante(new Usuario());
-                    dest.getEstudiante().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(PerfilAprendizajeRequestDTO::getEstudianteId, PerfilAprendizaje::setEstudiante);
         });
 
         // Mapeo explícito para OpcionRespuesta
         modelMapper.typeMap(OpcionRespuestaRequestDTO.class, OpcionRespuesta.class).addMappings(mapper -> {
-            mapper.map(OpcionRespuestaRequestDTO::getFlashcardId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getFlashcard() == null) dest.setFlashcard(new Flashcard());
-                    dest.getFlashcard().setId((Long) v);
-                }
-            });
+            mapper.using(idToFlashcard).map(OpcionRespuestaRequestDTO::getFlashcardId, OpcionRespuesta::setFlashcard);
         });
 
         // Mapeo explícito para LeccionCustom
         modelMapper.typeMap(LeccionCustomRequestDTO.class, LeccionCustom.class).addMappings(mapper -> {
-            mapper.map(LeccionCustomRequestDTO::getCreadorId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getCreador() == null) dest.setCreador(new Usuario());
-                    dest.getCreador().setId((Long) v);
-                }
-            });
-            mapper.map(LeccionCustomRequestDTO::getEstudianteId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getEstudiante() == null) dest.setEstudiante(new Usuario());
-                    dest.getEstudiante().setId((Long) v);
-                }
-            });
-            mapper.map(LeccionCustomRequestDTO::getTemaId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getTema() == null) dest.setTema(new Tema());
-                    dest.getTema().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(LeccionCustomRequestDTO::getCreadorId, LeccionCustom::setCreador);
+            mapper.using(idToUsuario).map(LeccionCustomRequestDTO::getEstudianteId, LeccionCustom::setEstudiante);
+            mapper.using(idToTema).map(LeccionCustomRequestDTO::getTemaId, LeccionCustom::setTema);
         });
 
         // Mapeo explícito para Flashcard
         modelMapper.typeMap(FlashcardRequestDTO.class, Flashcard.class).addMappings(mapper -> {
-            mapper.map(FlashcardRequestDTO::getLeccionId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getLeccion() == null) dest.setLeccion(new LeccionCustom());
-                    dest.getLeccion().setId((Long) v);
-                }
-            });
+            mapper.using(idToLeccionCustom).map(FlashcardRequestDTO::getLeccionId, Flashcard::setLeccion);
         });
 
         // Mapeo explícito para ElementoGuardado
         modelMapper.typeMap(ElementoGuardadoRequestDTO.class, ElementoGuardado.class).addMappings(mapper -> {
-            mapper.map(ElementoGuardadoRequestDTO::getUsuarioId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getUsuario() == null) dest.setUsuario(new Usuario());
-                    dest.getUsuario().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(ElementoGuardadoRequestDTO::getUsuarioId, ElementoGuardado::setUsuario);
         });
 
         // Mapeo explícito para Configuracion
         modelMapper.typeMap(ConfiguracionRequestDTO.class, Configuracion.class).addMappings(mapper -> {
-            mapper.map(ConfiguracionRequestDTO::getUsuarioId, (dest, v) -> {
-                if (v != null) {
-                    if (dest.getUsuario() == null) dest.setUsuario(new Usuario());
-                    dest.getUsuario().setId((Long) v);
-                }
-            });
+            mapper.using(idToUsuario).map(ConfiguracionRequestDTO::getUsuarioId, Configuracion::setUsuario);
         });
 
         return modelMapper;
