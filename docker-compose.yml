@@ -10,9 +10,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432" # Cambiado a 5433 para evitar conflicto con tu pgAdmin local
     volumes:
-      - ./db-init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
