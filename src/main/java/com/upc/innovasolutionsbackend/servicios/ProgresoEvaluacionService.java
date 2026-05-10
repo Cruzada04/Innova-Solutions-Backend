@@ -1,5 +1,7 @@
 package com.upc.innovasolutionsbackend.servicios;
 
+
+import com.upc.innovasolutionsbackend.dtos.ProgresoReporteDTO;
 import com.upc.innovasolutionsbackend.entidades.ProgresoEvaluacion;
 import com.upc.innovasolutionsbackend.repositorios.ProgresoEvaluacionRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProgresoEvaluacionService {
@@ -38,4 +41,18 @@ public class ProgresoEvaluacionService {
     public void eliminar(Long id) {
         progresoEvaluacionRepositorio.deleteById(id);
     }
+
+
+
+    public List<ProgresoReporteDTO> reportePorMes() {
+        return progresoEvaluacionRepositorio.contarPorMes().stream()
+                .map(row -> new ProgresoReporteDTO(
+                        (String) row[0],
+                        (Long) row[1],
+                        (Double) row[2],
+                        (Long) row[3]
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.upc.innovasolutionsbackend.controladores;
 
+import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 import com.upc.innovasolutionsbackend.dtos.LeccionCustomRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.LeccionCustomResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.LeccionCustom;
@@ -54,5 +55,11 @@ public class LeccionCustomController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         leccionCustomService.eliminar(id);
+    }
+
+
+    @GetMapping("/reporte/dificultad")
+    public List<FlashcardReporteDTO> reportePorDificultad() {
+        return leccionCustomService.reportePorDificultad();
     }
 }

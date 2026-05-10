@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.upc.innovasolutionsbackend.dtos.FlashcardConOpcionesRequestDTO;
+import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,4 +87,18 @@ public class FlashcardController {
     public void eliminar(@PathVariable Long id) {
         flashcardService.eliminar(id);
     }
+
+
+
+    @GetMapping("/reporte/origen")
+    public List<FlashcardReporteDTO> reportePorOrigen() {
+        return flashcardService.reportePorOrigen();
+    }
+
+    @GetMapping("/reporte/dificultad")
+    public List<FlashcardReporteDTO> reportePorDificultad() {
+        return flashcardService.reportePorDificultad();
+    }
+
+
 }

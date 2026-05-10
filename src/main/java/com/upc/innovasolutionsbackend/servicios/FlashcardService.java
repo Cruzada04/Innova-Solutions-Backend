@@ -1,5 +1,6 @@
 package com.upc.innovasolutionsbackend.servicios;
 
+import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 import com.upc.innovasolutionsbackend.entidades.Flashcard;
 import com.upc.innovasolutionsbackend.entidades.OpcionRespuesta;
 import com.upc.innovasolutionsbackend.repositorios.FlashcardRepositorio;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FlashcardService {
@@ -50,4 +52,26 @@ public class FlashcardService {
     public void eliminar(Long id) {
         flashcardRepositorio.deleteById(id);
     }
+
+
+
+    //reportes
+    public List<FlashcardReporteDTO> reportePorOrigen() {
+        return flashcardRepositorio.contarPorOrigen().stream()
+                .map(row -> new FlashcardReporteDTO(
+                        Boolean.TRUE.equals(row[0]) ? "Generada por IA" : "Manual",
+                        (Long) row[1]
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<FlashcardReporteDTO> reportePorDificultad() {
+        return flashcardRepositorio.contarPorDificultad().stream()
+                .map(row -> new FlashcardReporteDTO(
+                        row[0] != null ? (String) row[0] : "Sin dificultad",
+                        (Long) row[1]
+                ))
+                .collect(Collectors.toList());
+    }
+
 }
