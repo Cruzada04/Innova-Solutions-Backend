@@ -1,5 +1,6 @@
 package com.upc.innovasolutionsbackend.servicios;
 
+import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 import com.upc.innovasolutionsbackend.entidades.LeccionCustom;
 import com.upc.innovasolutionsbackend.repositorios.LeccionCustomRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LeccionCustomService {
@@ -37,5 +39,15 @@ public class LeccionCustomService {
     @Transactional
     public void eliminar(Long id) {
         leccionCustomRepositorio.deleteById(id);
+    }
+
+//Reporte por la dificultad
+    public List<FlashcardReporteDTO> reportePorDificultad() {
+        return leccionCustomRepositorio.contarPorDificultad().stream()
+                .map(row -> new FlashcardReporteDTO(
+                        row[0] != null ? (String) row[0] : "Sin dificultad",
+                        (Long) row[1]
+                ))
+                .collect(Collectors.toList());
     }
 }

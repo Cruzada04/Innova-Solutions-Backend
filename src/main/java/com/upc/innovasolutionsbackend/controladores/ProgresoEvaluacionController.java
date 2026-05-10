@@ -2,6 +2,7 @@ package com.upc.innovasolutionsbackend.controladores;
 
 import com.upc.innovasolutionsbackend.dtos.ProgresoEvaluacionRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.ProgresoEvaluacionResponseDTO;
+import com.upc.innovasolutionsbackend.dtos.ProgresoReporteDTO;
 import com.upc.innovasolutionsbackend.entidades.ProgresoEvaluacion;
 import com.upc.innovasolutionsbackend.servicios.ProgresoEvaluacionService;
 import jakarta.validation.Valid; // Importación necesaria para activar la validación
@@ -54,5 +55,11 @@ public class ProgresoEvaluacionController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         progresoService.eliminar(id);
+    }
+
+
+    @GetMapping("/reporte/pormes")
+    public List<ProgresoReporteDTO> reportePorMes() {
+        return progresoService.reportePorMes();
     }
 }
