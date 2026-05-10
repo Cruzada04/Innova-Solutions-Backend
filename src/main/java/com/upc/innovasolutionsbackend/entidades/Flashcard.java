@@ -16,10 +16,8 @@ public class Flashcard {
     private Long id;
     private String preguntaTexto;
     private String imagenUrl;
-    private String audioUrl;
     private String colorFondo;
     private String colorTexto;
-    private Boolean generadaPorIa;
 
     @ManyToOne
     @JoinColumn(name = "leccion_id")

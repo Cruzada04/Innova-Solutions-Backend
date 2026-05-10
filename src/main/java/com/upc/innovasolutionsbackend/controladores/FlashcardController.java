@@ -3,11 +3,14 @@ package com.upc.innovasolutionsbackend.controladores;
 import com.upc.innovasolutionsbackend.dtos.FlashcardRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.FlashcardResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Flashcard;
+import com.upc.innovasolutionsbackend.entidades.LeccionCustom;
+import com.upc.innovasolutionsbackend.entidades.OpcionRespuesta;
 import com.upc.innovasolutionsbackend.servicios.FlashcardService;
-import jakarta.validation.Valid; //
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.upc.innovasolutionsbackend.dtos.FlashcardConOpcionesRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 
 
@@ -29,6 +32,33 @@ public class FlashcardController {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard = flashcardService.insertar(flashcard);
         return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+    }
+
+    @PostMapping("/con-opciones")
+    public FlashcardResponseDTO insertarConOpciones(@Valid @RequestBody FlashcardConOpcionesRequestDTO dto) {
+
+        Flashcard flashcard = new Flashcard();
+        flashcard.setPreguntaTexto(dto.getPreguntaTexto());
+        flashcard.setImagenUrl(dto.getImagenUrl());
+        flashcard.setColorFondo(dto.getColorFondo());
+        flashcard.setColorTexto(dto.getColorTexto());
+
+        LeccionCustom leccion = new LeccionCustom();
+        leccion.setId(dto.getLeccionId());
+        flashcard.setLeccion(leccion);
+
+        List<OpcionRespuesta> opciones = dto.getOpciones().stream()
+                .map(itemDto -> {
+                    OpcionRespuesta opcion = new OpcionRespuesta();
+                    opcion.setTextoOpcion(itemDto.getTextoOpcion());
+                    opcion.setEsCorrecta(itemDto.getEsCorrecta());
+                    opcion.setFeedbackRespuesta(itemDto.getFeedbackRespuesta());
+                    return opcion;
+                })
+                .collect(Collectors.toList());
+
+        Flashcard guardada = flashcardService.insertarConOpciones(flashcard, opciones);
+        return modelMapper.map(guardada, FlashcardResponseDTO.class);
     }
 
     @GetMapping

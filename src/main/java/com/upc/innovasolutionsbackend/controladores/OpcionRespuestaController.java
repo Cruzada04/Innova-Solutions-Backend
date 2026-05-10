@@ -2,6 +2,7 @@ package com.upc.innovasolutionsbackend.controladores;
 
 import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaResponseDTO;
+import com.upc.innovasolutionsbackend.entidades.Flashcard;
 import com.upc.innovasolutionsbackend.entidades.OpcionRespuesta;
 import com.upc.innovasolutionsbackend.servicios.OpcionRespuestaService;
 import jakarta.validation.Valid; // Importación necesaria para activar la validación
@@ -22,9 +23,16 @@ public class OpcionRespuestaController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar el DTO al momento de la creación
     public OpcionRespuestaResponseDTO insertar(@Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
-        OpcionRespuesta opcion = modelMapper.map(opcionRequestDTO, OpcionRespuesta.class);
+        OpcionRespuesta opcion = new OpcionRespuesta();
+        opcion.setTextoOpcion(opcionRequestDTO.getTextoOpcion());
+        opcion.setEsCorrecta(opcionRequestDTO.getEsCorrecta());
+        opcion.setFeedbackRespuesta(opcionRequestDTO.getFeedbackRespuesta());
+
+        Flashcard flashcard = new Flashcard();
+        flashcard.setId(opcionRequestDTO.getFlashcardId());
+        opcion.setFlashcard(flashcard);
+
         opcion = opcionService.insertar(opcion);
         return modelMapper.map(opcion, OpcionRespuestaResponseDTO.class);
     }

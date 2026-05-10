@@ -2,7 +2,9 @@ package com.upc.innovasolutionsbackend.servicios;
 
 import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 import com.upc.innovasolutionsbackend.entidades.Flashcard;
+import com.upc.innovasolutionsbackend.entidades.OpcionRespuesta;
 import com.upc.innovasolutionsbackend.repositorios.FlashcardRepositorio;
+import com.upc.innovasolutionsbackend.repositorios.OpcionRespuestaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 public class FlashcardService {
     @Autowired
     private FlashcardRepositorio flashcardRepositorio;
+    @Autowired
+    private OpcionRespuestaRepositorio opcionRespuestaRepositorio;
 
     @Transactional
     public Flashcard insertar(Flashcard flashcard) {
@@ -34,6 +38,14 @@ public class FlashcardService {
             return flashcardRepositorio.save(flashcard);
         }
         return null;
+    }
+
+    @Transactional
+    public Flashcard insertarConOpciones(Flashcard flashcard, List<OpcionRespuesta> opciones) {
+        Flashcard guardada = flashcardRepositorio.save(flashcard);
+        opciones.forEach(opcion -> opcion.setFlashcard(guardada));
+        opcionRespuestaRepositorio.saveAll(opciones);
+        return guardada;
     }
 
     @Transactional
