@@ -90,10 +90,6 @@ public class FlashcardController {
 
 
 
-    @GetMapping("/reporte/origen")
-    public List<FlashcardReporteDTO> reportePorOrigen() {
-        return flashcardService.reportePorOrigen();
-    }
 
     @GetMapping("/reporte/dificultad")
     public List<FlashcardReporteDTO> reportePorDificultad() {
