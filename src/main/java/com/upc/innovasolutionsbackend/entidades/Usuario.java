@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,9 +16,15 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombreCompleto;
-    private String correoElectronico;
+    private String username;
     private String contrasena;
+    private String correoElectronico;
     private String metodoRegistro;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Rol> roles;
+
+    public Set<Rol> getRoles() { return roles; }
 
     @ManyToOne
     @JoinColumn(name = "rol_id")

@@ -56,14 +56,6 @@ public class FlashcardService {
 
 
     //reportes
-    public List<FlashcardReporteDTO> reportePorOrigen() {
-        return flashcardRepositorio.contarPorOrigen().stream()
-                .map(row -> new FlashcardReporteDTO(
-                        Boolean.TRUE.equals(row[0]) ? "Generada por IA" : "Manual",
-                        (Long) row[1]
-                ))
-                .collect(Collectors.toList());
-    }
 
     public List<FlashcardReporteDTO> reportePorDificultad() {
         return flashcardRepositorio.contarPorDificultad().stream()
