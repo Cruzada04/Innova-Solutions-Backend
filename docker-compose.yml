@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgre
     ports:
-      - "5433:5432" # Cambiado a 5433 porque el 5432 está ocupado por tu Postgres local
+      - "5432:5432" # Regresado al estándar para AWS/Ubuntu
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
