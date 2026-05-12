@@ -1,7 +1,7 @@
 package com.upc.innovasolutionsbackend.security.services;
 import com.upc.innovasolutionsbackend.entidades.Usuario;
 import com.upc.innovasolutionsbackend.entidades.Rol;
-import com.upc.innovasolutionsbackend.security.repositories.UserRepository;
+import com.upc.innovasolutionsbackend.repositorios.UsuarioRepositorio;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UsuarioRepositorio userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(UsuarioRepositorio userRepository) {
         this.userRepository = userRepository;
     }
 
