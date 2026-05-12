@@ -12,11 +12,11 @@ INSERT INTO categoria (nombre, icono_url) VALUES
 ('Habilidades Sociales', 'https://cdn-icons-png.flaticon.com/512/1189/1189132.png');
 
 --- 2. USUARIOS Y TEMAS
--- Nota: Las contraseñas están en texto plano. Si usas BCrypt, cámbialas por hashes.
+-- Nota: Las contraseñas están encriptadas con BCrypt. Todas son: password123
 INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id) VALUES 
-('Josué Adrián', 'josue_admin', 'admin123', 'josue.adrian@upc.edu.pe', 'Email', 3),
-('Roberto Gómez', 'roberto_tutor', 'tutor123', 'roberto.g@gmail.com', 'Google', 2),
-('Lucía Méndez', 'lucia_estudiante', 'user123', 'lucia.m@outlook.com', 'Email', 1);
+('Josué Adrián', 'josue_admin', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'josue.adrian@upc.edu.pe', 'Email', 3),
+('Roberto Gómez', 'roberto_tutor', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'roberto.g@gmail.com', 'Google', 2),
+('Lucía Méndez', 'lucia_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'lucia.m@outlook.com', 'Email', 1);
 
 -- Tabla intermedia ManyToMany (usuario_roles)
 INSERT INTO usuario_roles (usuario_id, roles_id) VALUES (1, 1), (2, 2), (3, 3);

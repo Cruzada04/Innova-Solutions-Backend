@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO user_roles (user_id, role_id ) VALUES (:user_id, :rol_id)", nativeQuery = true)
+    @Query(value = "INSERT INTO usuario_roles (usuario_id, roles_id ) VALUES (:user_id, :rol_id)", nativeQuery = true)
     public Integer insertUserRol(@Param("user_id") Long user_id, @Param("rol_id") Long rol_id);
 }
