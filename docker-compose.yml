@@ -8,6 +8,7 @@ services:
     environment:
       POSTGRES_DB: db_innovasolutions
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgre
     ports:
       - "5432:5432" # Regresado al estándar para AWS/Ubuntu
     volumes:
@@ -26,7 +27,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db_innovasolutions
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgre
-      - JWT_SECRET=secret12345678901234567890123456789012
+      - JWT_SECRET=0C/ZZj9OCW7Q74lUM200BayaFq6u12EKyps4NLFQNufowubX5nE1DQT8XRdwv0zUBp7Tns1yhYlwzUCm3maQkg==
       - IP_FRONTEND=http://localhost:4200
     networks:
       - innova-network
