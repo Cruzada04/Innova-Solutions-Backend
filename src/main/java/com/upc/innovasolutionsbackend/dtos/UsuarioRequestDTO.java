@@ -20,6 +20,10 @@ public class UsuarioRequestDTO {
     @Email(message = "Debe proporcionar un correo electrónico válido")
     private String correoElectronico;
 
+    @NotBlank(message = "El username es obligatoria")
+    @Size(min = 4, message = "El username debe tener al menos 4 caracteres")
+    private String username;
+
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String contrasena;
