@@ -53,8 +53,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(org.springframework.security.config.Customizer.withDefaults()) // Integrar CORS con Security
                 .csrf(AbstractHttpConfigurer::disable) // deshabilitar CSRF ya que no es necesario para una API REST
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/authenticate").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
                         .requestMatchers("/api/authenticate", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
@@ -74,18 +76,18 @@ public class SecurityConfig {
     //Filter opcional si se desea configurar globalmente el acceso a los endpoints sin anotaciones
     // en cada endpoint y adicionar mas configuraciones CORS
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public CorsFilter corsFilter(@Value("${ip.frontend}") String frontendUrl) {
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource(@Value("${ip.frontend}") String frontendUrl) {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin(frontendUrl);           // o addAllowedOriginPattern
+        config.addAllowedOrigin("http://localhost:4200"); // local testing
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
     }
 
 }
