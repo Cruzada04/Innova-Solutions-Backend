@@ -42,8 +42,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
-            System.out.println("USERNAME:" + username);
+            try {
+                username = jwtUtil.extractUsername(jwt);
+                System.out.println("USERNAME:" + username);
+            } catch (Exception e) {
+                System.out.println("JWT Token is invalid or expired: " + e.getMessage());
+            }
         }
 
         // Este es el punto clave donde se verifica si el token JWT es válido y se establece
