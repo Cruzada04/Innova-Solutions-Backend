@@ -43,6 +43,13 @@ public class LeccionCustomController {
         return modelMapper.map(leccion, LeccionCustomResponseDTO.class);
     }
 
+    @GetMapping("/estudiante/{estudianteId}")
+    public List<LeccionCustomResponseDTO> listarPorEstudiante(@PathVariable Long estudianteId) {
+        return leccionCustomService.listarPorEstudiante(estudianteId).stream()
+                .map(leccion -> modelMapper.map(leccion, LeccionCustomResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
     @PutMapping("/{id}")
     // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
     public LeccionCustomResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {

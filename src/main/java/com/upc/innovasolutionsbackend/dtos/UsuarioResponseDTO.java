@@ -1,6 +1,7 @@
 package com.upc.innovasolutionsbackend.dtos;
 
 import lombok.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,5 +14,6 @@ public class UsuarioResponseDTO {
     private String correoElectronico;
     private String metodoRegistro;
     private RolResponseDTO rol;
+    private List<RolResponseDTO> roles;
     private String fotoPerfil;
 }

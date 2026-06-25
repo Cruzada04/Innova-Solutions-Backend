@@ -11,4 +11,6 @@ import java.util.List;
 public interface LeccionCustomRepositorio extends JpaRepository<LeccionCustom, Long> {
     @Query("SELECT l.dificultad, COUNT(l) FROM LeccionCustom l GROUP BY l.dificultad")
     List<Object[]> contarPorDificultad();
+
+    List<LeccionCustom> findByEstudianteId(Long estudianteId);
 }

@@ -28,6 +28,10 @@ public class LeccionCustomService {
         return leccionCustomRepositorio.findById(id).orElse(null);
     }
 
+    public List<LeccionCustom> listarPorEstudiante(Long estudianteId) {
+        return leccionCustomRepositorio.findByEstudianteId(estudianteId);
+    }
+
     @Transactional
     public LeccionCustom actualizar(LeccionCustom leccion) {
         if (leccionCustomRepositorio.existsById(leccion.getId())) {

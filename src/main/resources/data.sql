@@ -79,6 +79,10 @@ INSERT INTO leccion_custom (titulo, dificultad, creador_id, estudiante_id, tema_
 SELECT '¿Cómo me siento hoy?', 'Media', 2, 3, 2 WHERE NOT EXISTS (SELECT 1 FROM leccion_custom WHERE titulo = '¿Cómo me siento hoy?');
 INSERT INTO leccion_custom (titulo, dificultad, creador_id, estudiante_id, tema_id)
 SELECT 'Las vocales mágicas', 'Fácil', 1, 2, 3 WHERE NOT EXISTS (SELECT 1 FROM leccion_custom WHERE titulo = 'Las vocales mágicas');
+INSERT INTO leccion_custom (titulo, dificultad, creador_id, estudiante_id, tema_id)
+SELECT 'Álgebra Básica', 'Fácil', 1, 3, 1 WHERE NOT EXISTS (SELECT 1 FROM leccion_custom WHERE titulo = 'Álgebra Básica');
+INSERT INTO leccion_custom (titulo, dificultad, creador_id, estudiante_id, tema_id)
+SELECT 'Geometría del Espacio', 'Media', 1, 3, 1 WHERE NOT EXISTS (SELECT 1 FROM leccion_custom WHERE titulo = 'Geometría del Espacio');
 
 --- 6. FLASHCARDS Y PROGRESO
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)

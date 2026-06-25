@@ -13,4 +13,6 @@ public class LeccionCustomResponseDTO {
     private UsuarioResponseDTO creador;
     private UsuarioResponseDTO estudiante;
     private TemaResponseDTO tema;
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("leccion")
+    private java.util.List<FlashcardResponseDTO> flashcards;
 }
