@@ -21,6 +21,9 @@ public class Usuario {
     private String correoElectronico;
     private String metodoRegistro;
 
+    @Column(columnDefinition = "TEXT")
+    private String fotoPerfil;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Rol> roles;
 
