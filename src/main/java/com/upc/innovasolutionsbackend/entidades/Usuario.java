@@ -1,5 +1,6 @@
 package com.upc.innovasolutionsbackend.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,15 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "plan_id")
     private PlanSuscripcion planSuscripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "creado_por_id")
+    @JsonIgnore
+    private Usuario creadoPor;
+
+    @OneToMany(mappedBy = "creadoPor")
+    @JsonIgnore
+    private List<Usuario> hijos;
 
     @OneToMany(mappedBy = "usuario")
     private List<ElementoGuardado> elementosGuardados;
