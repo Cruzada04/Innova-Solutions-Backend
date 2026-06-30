@@ -95,7 +95,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("El rol ALUMNO no existe en el sistema"));
 
         Usuario alumno = new Usuario();
-        alumno.setNombreCompleto(dto.getNombreCompleto());
+        alumno.setNombreCompleto(dto.getUsername());
         alumno.setUsername(dto.getUsername());
         alumno.setContrasena(passwordEncoder.encode(dto.getPin()));
         alumno.setMetodoRegistro("PADRE");

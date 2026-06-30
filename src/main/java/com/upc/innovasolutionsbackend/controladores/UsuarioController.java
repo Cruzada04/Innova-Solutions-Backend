@@ -13,8 +13,8 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -63,15 +63,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro-alumno")
+    @PreAuthorize("hasAuthority('ROLE_PADRE')")
     public UsuarioResponseDTO registrarAlumno(@Valid @RequestBody RegistroAlumnoRequestDTO dto,
                                                Authentication authentication) {
-        boolean esPadre = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(a -> a.equals("ROLE_PADRE"));
-        if (!esPadre) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Solo un usuario con rol PADRE puede registrar alumnos");
-        }
-
         String usernamePadre = authentication.getName();
         Usuario padre = usuarioService.listarPorUsername(usernamePadre)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no encontrado"));
