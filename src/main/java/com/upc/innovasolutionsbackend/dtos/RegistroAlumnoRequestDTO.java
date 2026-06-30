@@ -10,15 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 public class RegistroAlumnoRequestDTO {
 
-    @NotBlank(message = "El nickname es obligatorio")
+    @NotBlank(message = "El username es obligatorio")
     @Size(min = 3, max = 50)
     private String username;
 
     @NotBlank(message = "El PIN es obligatorio")
     @Size(min = 4, message = "El PIN debe tener al menos 4 caracteres")
     private String pin;
-
-    @NotBlank(message = "El nombre completo es obligatorio")
-    @Size(min = 3, max = 100)
-    private String nombreCompleto;
 }
