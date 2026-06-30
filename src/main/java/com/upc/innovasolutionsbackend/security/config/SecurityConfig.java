@@ -59,6 +59,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/authenticate").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/registro-padre").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/registro-alumno-public").permitAll()
                         .requestMatchers("/api/authenticate", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         //.requestMatchers("/api/proveedores").hasRole("ADMIN")
                         .anyRequest().authenticated() // cualquier endpoint puede ser llamado con tan solo autenticarse

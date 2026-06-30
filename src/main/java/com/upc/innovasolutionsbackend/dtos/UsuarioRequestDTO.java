@@ -34,6 +34,5 @@ public class UsuarioRequestDTO {
     @NotNull(message = "El ID del rol es obligatorio")
     private Long rolId;
 
-    @NotNull(message = "El ID del plan de suscripción es obligatorio")
     private Long planSuscripcionId;
 }
