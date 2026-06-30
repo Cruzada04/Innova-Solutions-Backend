@@ -5,15 +5,12 @@ import com.upc.innovasolutionsbackend.security.services.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 
 @Configuration
@@ -53,16 +49,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(org.springframework.security.config.Customizer.withDefaults()) // Integrar CORS con Security
-                .csrf(AbstractHttpConfigurer::disable) // deshabilitar CSRF ya que no es necesario para una API REST
+                .cors(org.springframework.security.config.Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/authenticate").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-                        .requestMatchers("/api/authenticate", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        //.requestMatchers("/api/proveedores").hasRole("ADMIN")
-                        .anyRequest().authenticated() // cualquier endpoint puede ser llamado con tan solo autenticarse
-                        //.anyRequest().denyAll() // aquí se obliga a todos los endpoints usen @PreAuthorize
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/registro-padre").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/registro-alumno-public").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/registro-alumno").hasAuthority("ROLE_PADRE")
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

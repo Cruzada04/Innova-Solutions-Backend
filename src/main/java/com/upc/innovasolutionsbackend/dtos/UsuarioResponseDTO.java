@@ -16,4 +16,5 @@ public class UsuarioResponseDTO {
     private RolResponseDTO rol;
     private List<RolResponseDTO> roles;
     private String fotoPerfil;
+    private Long creadoPorId;
 }
