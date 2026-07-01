@@ -1,5 +1,6 @@
 package com.upc.innovasolutionsbackend.dtos;
 
+import java.util.List;
 import lombok.*;
 
 @Getter
@@ -13,4 +14,6 @@ public class FlashcardResponseDTO {
     private String colorFondo;
     private String colorTexto;
     private LeccionCustomResponseDTO leccion;
+    private List<OpcionRespuestaItemDTO> opciones;
+    private String respuestaCorrecta;
 }

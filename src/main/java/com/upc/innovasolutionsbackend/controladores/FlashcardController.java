@@ -15,6 +15,7 @@ import com.upc.innovasolutionsbackend.dtos.FlashcardConOpcionesRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 
 
+import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaItemDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,17 +64,29 @@ public class FlashcardController {
         return modelMapper.map(guardada, FlashcardResponseDTO.class);
     }
 
+    private FlashcardResponseDTO toDto(Flashcard f) {
+        FlashcardResponseDTO dto = modelMapper.map(f, FlashcardResponseDTO.class);
+        if (f.getOpciones() != null) {
+            dto.setOpciones(f.getOpciones().stream().map(o ->
+                new OpcionRespuestaItemDTO(o.getTextoOpcion(), o.getEsCorrecta(), o.getFeedbackRespuesta())
+            ).collect(Collectors.toList()));
+            dto.setRespuestaCorrecta(f.getOpciones().stream()
+                .filter(OpcionRespuesta::getEsCorrecta)
+                .findFirst().map(OpcionRespuesta::getTextoOpcion).orElse(null));
+        }
+        return dto;
+    }
+
     @GetMapping
     public List<FlashcardResponseDTO> listar() {
         return flashcardService.listar().stream()
-                .map(flashcard -> modelMapper.map(flashcard, FlashcardResponseDTO.class))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public FlashcardResponseDTO listarPorId(@PathVariable Long id) {
-        Flashcard flashcard = flashcardService.listarPorId(id);
-        return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+        return toDto(flashcardService.listarPorId(id));
     }
 
     @PutMapping("/{id}")

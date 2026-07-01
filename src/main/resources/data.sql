@@ -82,11 +82,11 @@ SELECT 'Las vocales mágicas', 'Fácil', 1, 2, 3 WHERE NOT EXISTS (SELECT 1 FROM
 
 --- 6. FLASHCARDS Y PROGRESO
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
-SELECT '¿Cuántas manzanas ves?', 'img_manzanas.png', '#FFEBEE', '#B71C1C', 1 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Cuántas manzanas ves?');
+SELECT '¿Cuántas manzanas ves?', 'https://placehold.co/300x200/FFEBEE/B71C1C?text=🍎+Manzanas', '#FFEBEE', '#B71C1C', 1 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Cuántas manzanas ves?');
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
-SELECT 'Identifica la cara de alegría', 'img_alegria.png', '#E3F2FD', '#0D47A1', 2 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = 'Identifica la cara de alegría');
+SELECT 'Identifica la cara de alegría', 'https://placehold.co/300x200/E3F2FD/0D47A1?text=😊+Alegría', '#E3F2FD', '#0D47A1', 2 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = 'Identifica la cara de alegría');
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
-SELECT '¿Qué vocal empieza con Avión?', 'img_avion.png', '#F1F8E9', '#33691E', 3 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué vocal empieza con Avión?');
+SELECT '¿Qué vocal empieza con Avión?', 'https://placehold.co/300x200/F1F8E9/33691E?text=✈️+Avion', '#F1F8E9', '#33691E', 3 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué vocal empieza con Avión?');
 
 INSERT INTO progreso_evaluacion (puntaje, medallas_obtenidas, fecha_evaluacion, reporte_generado, estudiante_id, leccion_id)
 SELECT 80, 2, '2026-05-10 10:00:00', 'Buen progreso inicial', 3, 1 WHERE NOT EXISTS (SELECT 1 FROM progreso_evaluacion WHERE estudiante_id = 3 AND leccion_id = 1 AND fecha_evaluacion = '2026-05-10 10:00:00');
