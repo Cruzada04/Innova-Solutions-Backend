@@ -5,9 +5,10 @@ import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Flashcard;
 import com.upc.innovasolutionsbackend.entidades.OpcionRespuesta;
 import com.upc.innovasolutionsbackend.servicios.OpcionRespuestaService;
-import jakarta.validation.Valid; // Importación necesaria para activar la validación
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class OpcionRespuestaController {
     private ModelMapper modelMapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public OpcionRespuestaResponseDTO insertar(@Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
         OpcionRespuesta opcion = new OpcionRespuesta();
         opcion.setTextoOpcion(opcionRequestDTO.getTextoOpcion());
@@ -51,7 +53,7 @@ public class OpcionRespuestaController {
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public OpcionRespuestaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
         OpcionRespuesta opcion = modelMapper.map(opcionRequestDTO, OpcionRespuesta.class);
         opcion.setId(id);
@@ -60,6 +62,7 @@ public class OpcionRespuestaController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public void eliminar(@PathVariable Long id) {
         opcionService.eliminar(id);
     }

@@ -5,9 +5,10 @@ import com.upc.innovasolutionsbackend.dtos.ProgresoEvaluacionResponseDTO;
 import com.upc.innovasolutionsbackend.dtos.ProgresoReporteDTO;
 import com.upc.innovasolutionsbackend.entidades.ProgresoEvaluacion;
 import com.upc.innovasolutionsbackend.servicios.ProgresoEvaluacionService;
-import jakarta.validation.Valid; // Importación necesaria para activar la validación
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProgresoEvaluacionController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public List<ProgresoEvaluacionResponseDTO> listar() {
         return progresoService.listar().stream()
                 .map(progreso -> modelMapper.map(progreso, ProgresoEvaluacionResponseDTO.class))
@@ -38,6 +40,7 @@ public class ProgresoEvaluacionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public ProgresoEvaluacionResponseDTO listarPorId(@PathVariable Long id) {
         ProgresoEvaluacion progreso = progresoService.listarPorId(id);
         return modelMapper.map(progreso, ProgresoEvaluacionResponseDTO.class);
@@ -59,6 +62,7 @@ public class ProgresoEvaluacionController {
 
 
     @GetMapping("/reporte/pormes")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public List<ProgresoReporteDTO> reportePorMes() {
         return progresoService.reportePorMes();
     }

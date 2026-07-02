@@ -5,9 +5,10 @@ import com.upc.innovasolutionsbackend.dtos.LeccionCustomRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.LeccionCustomResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.LeccionCustom;
 import com.upc.innovasolutionsbackend.servicios.LeccionCustomService;
-import jakarta.validation.Valid; // Importación necesaria para activar la validación
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class LeccionCustomController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para activar las validaciones definidas en el DTO al insertar
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public LeccionCustomResponseDTO insertar(@Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
         LeccionCustom leccion = modelMapper.map(leccionRequestDTO, LeccionCustom.class);
         leccion = leccionCustomService.insertar(leccion);
@@ -44,7 +45,7 @@ public class LeccionCustomController {
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public LeccionCustomResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
         LeccionCustom leccion = modelMapper.map(leccionRequestDTO, LeccionCustom.class);
         leccion.setId(id);
@@ -53,12 +54,14 @@ public class LeccionCustomController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public void eliminar(@PathVariable Long id) {
         leccionCustomService.eliminar(id);
     }
 
 
     @GetMapping("/reporte/dificultad")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public List<FlashcardReporteDTO> reportePorDificultad() {
         return leccionCustomService.reportePorDificultad();
     }

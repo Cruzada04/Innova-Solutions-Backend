@@ -4,9 +4,10 @@ import com.upc.innovasolutionsbackend.dtos.RelacionTutorEstudianteRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.RelacionTutorEstudianteResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.RelacionTutorEstudiante;
 import com.upc.innovasolutionsbackend.servicios.RelacionTutorEstudianteService;
-import jakarta.validation.Valid; // Importación necesaria para activar la validación
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class RelacionTutorEstudianteController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar el DTO al momento de la creación
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public RelacionTutorEstudianteResponseDTO insertar(@Valid @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
         RelacionTutorEstudiante relacion = modelMapper.map(relacionRequestDTO, RelacionTutorEstudiante.class);
         relacion = relacionService.insertar(relacion);
@@ -30,6 +31,7 @@ public class RelacionTutorEstudianteController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public List<RelacionTutorEstudianteResponseDTO> listar() {
         return relacionService.listar().stream()
                 .map(relacion -> modelMapper.map(relacion, RelacionTutorEstudianteResponseDTO.class))
@@ -37,13 +39,14 @@ public class RelacionTutorEstudianteController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public RelacionTutorEstudianteResponseDTO listarPorId(@PathVariable Long id) {
         RelacionTutorEstudiante relacion = relacionService.listarPorId(id);
         return modelMapper.map(relacion, RelacionTutorEstudianteResponseDTO.class);
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public RelacionTutorEstudianteResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
         RelacionTutorEstudiante relacion = modelMapper.map(relacionRequestDTO, RelacionTutorEstudiante.class);
         relacion.setId(id);
@@ -52,6 +55,7 @@ public class RelacionTutorEstudianteController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public void eliminar(@PathVariable Long id) {
         relacionService.eliminar(id);
     }

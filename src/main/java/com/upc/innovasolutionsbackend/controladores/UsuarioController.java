@@ -1,22 +1,14 @@
 package com.upc.innovasolutionsbackend.controladores;
 
-import com.upc.innovasolutionsbackend.dtos.RegistroAlumnoPublicRequestDTO;
-import com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO;
-import com.upc.innovasolutionsbackend.dtos.RegistroPadreRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.UsuarioRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.UsuarioResponseDTO;
-import com.upc.innovasolutionsbackend.entidades.Rol;
 import com.upc.innovasolutionsbackend.entidades.Usuario;
-import com.upc.innovasolutionsbackend.repositorios.RolRepositorio;
 import com.upc.innovasolutionsbackend.servicios.UsuarioService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,53 +20,18 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @Autowired
-    private RolRepositorio rolRepositorio;
-
-    @Autowired
     private ModelMapper modelMapper;
 
-    private static final String ROL_PROFESOR = "PROFESOR";
-
     @PostMapping
-    public UsuarioResponseDTO insertar(@Valid @RequestBody UsuarioRequestDTO dto) {
-        Rol rol = rolRepositorio.findById(dto.getRolId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "El rol especificado no existe"));
-
-        if (ROL_PROFESOR.equalsIgnoreCase(rol.getNombre()) && dto.getPlanSuscripcionId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El plan de suscripción es obligatorio para usuarios con rol PROFESOR");
-        }
-
-        Usuario usuario = modelMapper.map(dto, Usuario.class);
+    // Se agrega @Valid para validar datos críticos como el email y la contraseña al crear
+    public UsuarioResponseDTO insertar(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario = usuarioService.insertar(usuario);
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
 
-    @PostMapping("/registro-padre")
-    public UsuarioResponseDTO registrarPadre(@Valid @RequestBody RegistroPadreRequestDTO dto) {
-        Usuario padre = usuarioService.registrarPadre(dto);
-        return modelMapper.map(padre, UsuarioResponseDTO.class);
-    }
-
-    @PostMapping("/registro-alumno-public")
-    public UsuarioResponseDTO registrarAlumnoPublic(@Valid @RequestBody RegistroAlumnoPublicRequestDTO dto) {
-        Usuario alumno = usuarioService.registrarAlumnoPublic(dto);
-        return modelMapper.map(alumno, UsuarioResponseDTO.class);
-    }
-
-    @PostMapping("/registro-alumno")
-    @PreAuthorize("hasAuthority('ROLE_PADRE')")
-    public UsuarioResponseDTO registrarAlumno(@Valid @RequestBody RegistroAlumnoRequestDTO dto,
-                                               Authentication authentication) {
-        String usernamePadre = authentication.getName();
-        Usuario padre = usuarioService.listarPorUsername(usernamePadre)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no encontrado"));
-
-        Usuario alumno = usuarioService.registrarAlumno(dto, padre.getId());
-        return modelMapper.map(alumno, UsuarioResponseDTO.class);
-    }
-
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public List<UsuarioResponseDTO> listar() {
         return usuarioService.listar().stream()
                 .map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
@@ -88,14 +45,16 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public UsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDTO dto) {
-        Usuario usuario = modelMapper.map(dto, Usuario.class);
+    @PreAuthorize("hasRole('ADMIN')")
+    public UsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario.setId(id);
         usuario = usuarioService.actualizar(usuario);
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminar(id);
     }

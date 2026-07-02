@@ -4,9 +4,10 @@ import com.upc.innovasolutionsbackend.dtos.TemaRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.TemaResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Tema;
 import com.upc.innovasolutionsbackend.servicios.TemaService;
-import jakarta.validation.Valid; // Importación necesaria
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class TemaController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar el DTO antes de la inserción
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public TemaResponseDTO insertar(@Valid @RequestBody TemaRequestDTO temaRequestDTO) {
         Tema tema = modelMapper.map(temaRequestDTO, Tema.class);
         tema = temaService.insertar(tema);
@@ -43,7 +44,7 @@ public class TemaController {
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para validar los datos actualizados
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public TemaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody TemaRequestDTO temaRequestDTO) {
         Tema tema = modelMapper.map(temaRequestDTO, Tema.class);
         tema.setId(id);
@@ -52,6 +53,7 @@ public class TemaController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public void eliminar(@PathVariable Long id) {
         temaService.eliminar(id);
     }

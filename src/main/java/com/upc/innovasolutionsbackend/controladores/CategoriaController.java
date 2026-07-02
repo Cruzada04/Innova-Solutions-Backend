@@ -4,9 +4,10 @@ import com.upc.innovasolutionsbackend.dtos.CategoriaRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.CategoriaResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Categoria;
 import com.upc.innovasolutionsbackend.servicios.CategoriaService;
-import jakarta.validation.Valid; // 1. Importación necesaria
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class CategoriaController {
 
     // 2. Se agrega @Valid para activar las validaciones del DTO al insertar
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public CategoriaResponseDTO insertar(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
         categoria = categoriaService.insertar(categoria);
@@ -44,6 +46,7 @@ public class CategoriaController {
 
     // 3. Se agrega @Valid para validar los datos también al actualizar
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public CategoriaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
         categoria.setId(id);
@@ -52,6 +55,7 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public void eliminar(@PathVariable Long id) {
         categoriaService.eliminar(id);
     }

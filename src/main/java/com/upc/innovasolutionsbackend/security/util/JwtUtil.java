@@ -7,13 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 //Clase que se encargara de generar y validar los tokens JWT.
 @Component
@@ -24,16 +21,6 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public List<String> extractRoles(String token) {
-        String roles = extractClaim(token, claims -> claims.get("roles", String.class));
-        if (roles == null || roles.isBlank()) {
-            return List.of();
-        }
-        return Arrays.stream(roles.split(","))
-                .filter(r -> !r.isBlank())
-                .collect(Collectors.toList());
     }
 
     public Date extractExpiration(String token) {
@@ -69,7 +56,7 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        //claims.put("roles", "ROLE_PROFESOR,ROLE_PADRE,ROLE_ALUMNO"); // Aquí se puede agregar roles u otra info al token
+        //claims.put("roles", "ROLE_USER,ROLE_ADMIN"); // Aquí se puede agregar roles u otra info al token
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 20)) // 20 min
                 .signWith(SignatureAlgorithm.HS512, secretKey).compact();

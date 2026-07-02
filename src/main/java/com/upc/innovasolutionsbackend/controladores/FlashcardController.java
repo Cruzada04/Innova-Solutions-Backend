@@ -9,11 +9,13 @@ import com.upc.innovasolutionsbackend.servicios.FlashcardService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.upc.innovasolutionsbackend.dtos.FlashcardConOpcionesRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.FlashcardReporteDTO;
 
 
+import com.upc.innovasolutionsbackend.dtos.OpcionRespuestaItemDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,7 @@ public class FlashcardController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para activar las validaciones definidas en FlashcardRequestDTO
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public FlashcardResponseDTO insertar(@Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard = flashcardService.insertar(flashcard);
@@ -35,6 +37,7 @@ public class FlashcardController {
     }
 
     @PostMapping("/con-opciones")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public FlashcardResponseDTO insertarConOpciones(@Valid @RequestBody FlashcardConOpcionesRequestDTO dto) {
 
         Flashcard flashcard = new Flashcard();
@@ -61,21 +64,33 @@ public class FlashcardController {
         return modelMapper.map(guardada, FlashcardResponseDTO.class);
     }
 
+    private FlashcardResponseDTO toDto(Flashcard f) {
+        FlashcardResponseDTO dto = modelMapper.map(f, FlashcardResponseDTO.class);
+        if (f.getOpciones() != null) {
+            dto.setOpciones(f.getOpciones().stream().map(o ->
+                new OpcionRespuestaItemDTO(o.getTextoOpcion(), o.getEsCorrecta(), o.getFeedbackRespuesta())
+            ).collect(Collectors.toList()));
+            dto.setRespuestaCorrecta(f.getOpciones().stream()
+                .filter(OpcionRespuesta::getEsCorrecta)
+                .findFirst().map(OpcionRespuesta::getTextoOpcion).orElse(null));
+        }
+        return dto;
+    }
+
     @GetMapping
     public List<FlashcardResponseDTO> listar() {
         return flashcardService.listar().stream()
-                .map(flashcard -> modelMapper.map(flashcard, FlashcardResponseDTO.class))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public FlashcardResponseDTO listarPorId(@PathVariable Long id) {
-        Flashcard flashcard = flashcardService.listarPorId(id);
-        return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+        return toDto(flashcardService.listarPorId(id));
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para asegurar que los datos actualizados también cumplan con las reglas
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public FlashcardResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard.setId(id);
@@ -84,6 +99,7 @@ public class FlashcardController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public void eliminar(@PathVariable Long id) {
         flashcardService.eliminar(id);
     }
@@ -92,6 +108,7 @@ public class FlashcardController {
 
 
     @GetMapping("/reporte/dificultad")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public List<FlashcardReporteDTO> reportePorDificultad() {
         return flashcardService.reportePorDificultad();
     }

@@ -4,9 +4,10 @@ import com.upc.innovasolutionsbackend.dtos.PlanSuscripcionRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.PlanSuscripcionResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.PlanSuscripcion;
 import com.upc.innovasolutionsbackend.servicios.PlanSuscripcionService;
-import jakarta.validation.Valid; // Importación necesaria para activar la validación
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class PlanSuscripcionController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar el DTO al momento de la creación
+    @PreAuthorize("hasRole('ADMIN')")
     public PlanSuscripcionResponseDTO insertar(@Valid @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
         PlanSuscripcion plan = modelMapper.map(planRequestDTO, PlanSuscripcion.class);
         plan = planService.insertar(plan);
@@ -43,7 +44,7 @@ public class PlanSuscripcionController {
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    @PreAuthorize("hasRole('ADMIN')")
     public PlanSuscripcionResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
         PlanSuscripcion plan = modelMapper.map(planRequestDTO, PlanSuscripcion.class);
         plan.setId(id);
@@ -52,6 +53,7 @@ public class PlanSuscripcionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void eliminar(@PathVariable Long id) {
         planService.eliminar(id);
     }

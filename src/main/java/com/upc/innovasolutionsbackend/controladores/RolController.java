@@ -4,9 +4,10 @@ import com.upc.innovasolutionsbackend.dtos.RolRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.RolResponseDTO;
 import com.upc.innovasolutionsbackend.entidades.Rol;
 import com.upc.innovasolutionsbackend.servicios.RolService;
-import jakarta.validation.Valid; // Importación necesaria para activar la validación
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class RolController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar el DTO al momento de la creación
+    @PreAuthorize("hasRole('ADMIN')")
     public RolResponseDTO insertar(@Valid @RequestBody RolRequestDTO rolRequestDTO) {
         Rol rol = modelMapper.map(rolRequestDTO, Rol.class);
         rol = rolService.insertar(rol);
@@ -43,7 +44,7 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
-    // Se agrega @Valid para asegurar que los datos actualizados también sean correctos
+    @PreAuthorize("hasRole('ADMIN')")
     public RolResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody RolRequestDTO rolRequestDTO) {
         Rol rol = modelMapper.map(rolRequestDTO, Rol.class);
         rol.setId(id);
@@ -52,6 +53,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void eliminar(@PathVariable Long id) {
         rolService.eliminar(id);
     }
