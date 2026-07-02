@@ -65,6 +65,10 @@ public class ModelMapperConfig {
             mapper.using(idToPlanSuscripcion).map(UsuarioRequestDTO::getPlanSuscripcionId, Usuario::setPlanSuscripcion);
         });
 
+        modelMapper.typeMap(Usuario.class, UsuarioResponseDTO.class).addMappings(mapper ->
+                mapper.map(Usuario::getCreadoPorId, UsuarioResponseDTO::setCreadoPorId)
+        );
+
         // Mapeo explícito para Tema
         modelMapper.typeMap(TemaRequestDTO.class, Tema.class).addMappings(mapper -> {
             mapper.using(idToCategoria).map(TemaRequestDTO::getCategoriaId, Tema::setCategoria);
