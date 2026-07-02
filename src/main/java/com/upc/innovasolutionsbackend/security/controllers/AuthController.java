@@ -4,6 +4,7 @@ import com.upc.innovasolutionsbackend.security.dtos.AuthRequestDTO;
 import com.upc.innovasolutionsbackend.security.dtos.AuthResponseDTO;
 import com.upc.innovasolutionsbackend.security.services.CustomUserDetailsService;
 import com.upc.innovasolutionsbackend.security.util.JwtUtil;
+import com.upc.innovasolutionsbackend.repositorios.UsuarioRepositorio;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,11 +27,13 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
+    private final UsuarioRepositorio userRepository;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, CustomUserDetailsService userDetailsService, UsuarioRepositorio userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/authenticate")
@@ -52,6 +55,11 @@ public class AuthController {
         AuthResponseDTO authResponseDTO = new AuthResponseDTO();
         authResponseDTO.setRoles(roles);
         authResponseDTO.setJwt(token);
+
+        userRepository.findByUsername(authRequest.getUsername()).ifPresent(user -> {
+            authResponseDTO.setId(user.getId());
+        });
+
         return ResponseEntity.ok().headers(responseHeaders).body(authResponseDTO);
     }
 
