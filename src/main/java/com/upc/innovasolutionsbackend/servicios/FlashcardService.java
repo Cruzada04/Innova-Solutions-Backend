@@ -40,10 +40,14 @@ public class FlashcardService {
         return null;
     }
 
+
     @Transactional
     public Flashcard insertarConOpciones(Flashcard flashcard, List<OpcionRespuesta> opciones) {
+        // Guardar la entidad padre (Flashcard) primero
         Flashcard guardada = flashcardRepositorio.save(flashcard);
+        // Vincular cada opción de respuesta con la flashcard recién creada
         opciones.forEach(opcion -> opcion.setFlashcard(guardada));
+        // Guardar todas las opciones de respuesta
         opcionRespuestaRepositorio.saveAll(opciones);
         return guardada;
     }
