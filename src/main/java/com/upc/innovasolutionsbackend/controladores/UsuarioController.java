@@ -58,4 +58,12 @@ public class UsuarioController {
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminar(id);
     }
+
+    @PostMapping("/registro-alumno")
+    public UsuarioResponseDTO registrarAlumno(
+            @jakarta.validation.Valid @RequestBody com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO request,
+            org.springframework.security.core.Authentication auth) {
+        Usuario estudiante = usuarioService.registrarAlumno(request, auth.getName());
+        return modelMapper.map(estudiante, UsuarioResponseDTO.class);
+    }
 }

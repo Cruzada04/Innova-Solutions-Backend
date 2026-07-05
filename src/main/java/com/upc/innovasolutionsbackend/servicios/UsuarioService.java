@@ -1,6 +1,8 @@
 package com.upc.innovasolutionsbackend.servicios;
 
 import com.upc.innovasolutionsbackend.entidades.Usuario;
+import com.upc.innovasolutionsbackend.entidades.Rol;
+import com.upc.innovasolutionsbackend.entidades.PlanSuscripcion;
 import com.upc.innovasolutionsbackend.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,5 +68,29 @@ public class UsuarioService {
     @Transactional
     public void eliminar(Long id) {
         usuarioRepositorio.deleteById(id);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public Usuario registrarAlumno(com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO request, String tutorUsername) {
+        Usuario tutor = usuarioRepositorio.findByUsername(tutorUsername)
+                .orElseThrow(() -> new RuntimeException("Tutor no encontrado"));
+        Usuario estudiante = new Usuario();
+        estudiante.setNombreCompleto(request.getUsername());
+        estudiante.setUsername(request.getUsername());
+        estudiante.setContrasena(passwordEncoder.encode(request.getPin()));
+        estudiante.setCorreoElectronico(request.getUsername() + "@student.innova.com");
+        estudiante.setMetodoRegistro("PADRE");
+        
+        Rol rolEstudiante = new Rol();
+        rolEstudiante.setId(3L);
+        estudiante.setRol(rolEstudiante);
+        estudiante.setRoles(java.util.Collections.singleton(rolEstudiante));
+        estudiante.setCreadoPor(tutor);
+        
+        PlanSuscripcion plan = new PlanSuscripcion();
+        plan.setId(1L);
+        estudiante.setPlanSuscripcion(plan);
+        
+        return usuarioRepositorio.save(estudiante);
     }
 }
