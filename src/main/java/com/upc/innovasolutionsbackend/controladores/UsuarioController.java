@@ -67,4 +67,9 @@ public class UsuarioController {
         Usuario estudiante = usuarioService.registrarAlumno(request, auth.getName());
         return modelMapper.map(estudiante, UsuarioResponseDTO.class);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public org.springframework.http.ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("message", ex.getMessage()));
+    }
 }

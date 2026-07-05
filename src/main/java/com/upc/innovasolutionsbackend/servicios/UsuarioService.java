@@ -22,6 +22,10 @@ public class UsuarioService {
 
     @Transactional
     public Usuario insertar(Usuario usuario) {
+        if (usuarioRepositorio.findByUsername(usuario.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("El usuario ya existe");
+        }
+        
         // Encriptar contraseña antes de guardar
         if (usuario.getContrasena() != null) {
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
@@ -47,6 +51,11 @@ public class UsuarioService {
     public Usuario actualizar(Usuario usuario) {
         Usuario existente = usuarioRepositorio.findById(usuario.getId()).orElse(null);
         if (existente != null) {
+            Usuario existenteByUsername = usuarioRepositorio.findByUsername(usuario.getUsername()).orElse(null);
+            if (existenteByUsername != null && !existenteByUsername.getId().equals(usuario.getId())) {
+                throw new IllegalArgumentException("El usuario ya existe");
+            }
+
             // Si no se cambia la contraseña, el frontend manda "dummyPassword123"
             if (usuario.getContrasena() == null || usuario.getContrasena().equals("dummyPassword123")) {
                 usuario.setContrasena(existente.getContrasena());
@@ -72,6 +81,10 @@ public class UsuarioService {
 
     @org.springframework.transaction.annotation.Transactional
     public Usuario registrarAlumno(com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO request, String tutorUsername) {
+        if (usuarioRepositorio.findByUsername(request.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("El usuario ya existe");
+        }
+        
         Usuario tutor = usuarioRepositorio.findByUsername(tutorUsername)
                 .orElseThrow(() -> new RuntimeException("Tutor no encontrado"));
         Usuario estudiante = new Usuario();
