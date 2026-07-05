@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public UsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario.setId(id);
