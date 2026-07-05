@@ -31,10 +31,12 @@ public class UsuarioService {
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         }
 
+
         // Sincronizar el rol ManyToOne con el Set ManyToMany para Spring Security
         if (usuario.getRol() != null) {
             usuario.setRoles(Collections.singleton(usuario.getRol()));
         }
+
 
         return usuarioRepositorio.save(usuario);
     }
@@ -60,10 +62,9 @@ public class UsuarioService {
             if (usuario.getContrasena() == null || usuario.getContrasena().equals("dummyPassword123")) {
                 usuario.setContrasena(existente.getContrasena());
             } else {
-                // Si es una nueva contraseña, la encriptamos
+            // Si es una nueva contraseña, la encriptamos
                 usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
             }
-
             // Sincronizar el rol ManyToOne con el Set ManyToMany para Spring Security
             if (usuario.getRol() != null) {
                 usuario.setRoles(Collections.singleton(usuario.getRol()));
