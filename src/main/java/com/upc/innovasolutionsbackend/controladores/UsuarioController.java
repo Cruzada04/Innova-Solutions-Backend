@@ -60,6 +60,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro-alumno")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public UsuarioResponseDTO registrarAlumno(
             @jakarta.validation.Valid @RequestBody com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO request,
             org.springframework.security.core.Authentication auth) {
