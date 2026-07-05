@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
     public UsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario.setId(id);
@@ -57,5 +57,19 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ADMIN')")
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminar(id);
+    }
+
+    @PostMapping("/registro-alumno")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    public UsuarioResponseDTO registrarAlumno(
+            @jakarta.validation.Valid @RequestBody com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO request,
+            org.springframework.security.core.Authentication auth) {
+        Usuario estudiante = usuarioService.registrarAlumno(request, auth.getName());
+        return modelMapper.map(estudiante, UsuarioResponseDTO.class);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public org.springframework.http.ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("message", ex.getMessage()));
     }
 }
