@@ -116,3 +116,26 @@ INSERT INTO elemento_guardado (tipo_elemento, elemento_id, usuario_id)
 SELECT 'FLASHCARD', 2, 3 WHERE NOT EXISTS (SELECT 1 FROM elemento_guardado WHERE tipo_elemento = 'FLASHCARD' AND elemento_id = 2 AND usuario_id = 3);
 INSERT INTO elemento_guardado (tipo_elemento, elemento_id, usuario_id)
 SELECT 'LECCION', 3, 2 WHERE NOT EXISTS (SELECT 1 FROM elemento_guardado WHERE tipo_elemento = 'LECCION' AND elemento_id = 3 AND usuario_id = 2);
+
+--- 8. EXTRA ALUMNOS MOCK
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
+SELECT 'María Gonzalez', 'maria_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'maria.g@gmail.com', 'Email', 1, 3
+WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'maria_estudiante');
+INSERT INTO usuario_roles (usuario_id, roles_id)
+SELECT (SELECT id FROM usuario WHERE username='maria_estudiante'), 3 
+WHERE NOT EXISTS (SELECT 1 FROM usuario_roles WHERE usuario_id = (SELECT id FROM usuario WHERE username='maria_estudiante') AND roles_id = 3);
+
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
+SELECT 'Pedro Lopez', 'pedro_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'pedro.l@gmail.com', 'Email', 1, 3
+WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'pedro_estudiante');
+INSERT INTO usuario_roles (usuario_id, roles_id)
+SELECT (SELECT id FROM usuario WHERE username='pedro_estudiante'), 3 
+WHERE NOT EXISTS (SELECT 1 FROM usuario_roles WHERE usuario_id = (SELECT id FROM usuario WHERE username='pedro_estudiante') AND roles_id = 3);
+-- Backfill missing roles for users created manually
+INSERT INTO usuario_roles (usuario_id, roles_id)
+SELECT id, rol_id FROM usuario
+WHERE rol_id IS NOT NULL
+  AND NOT EXISTS (
+      SELECT 1 FROM usuario_roles ur
+      WHERE ur.usuario_id = usuario.id AND ur.roles_id = usuario.rol_id
+  );

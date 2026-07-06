@@ -36,6 +36,10 @@ public class UsuarioController {
     @PostMapping
     public UsuarioResponseDTO insertar(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
+        if (usuarioRequestDTO.getRolId() != null) {
+            Rol rol = rolRepositorio.findById(usuarioRequestDTO.getRolId()).orElse(null);
+            usuario.setRol(rol);
+        }
         usuario = usuarioService.insertar(usuario);
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
