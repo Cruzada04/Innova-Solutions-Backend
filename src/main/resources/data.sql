@@ -88,6 +88,14 @@ INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, lec
 SELECT 'Identifica la cara de alegría', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80', '#E3F2FD', '#0D47A1', 2 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = 'Identifica la cara de alegría');
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
 SELECT '¿Qué vocal empieza con Avión?', 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=400&q=80', '#F1F8E9', '#33691E', 3 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué vocal empieza con Avión?');
+INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
+SELECT '¿Cuál es el color azul?', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=400&q=80', '#E3F2FD', '#0D47A1', 1 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Cuál es el color azul?');
+INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
+SELECT '¿Cuántos dedos hay en una mano?', 'https://images.unsplash.com/photo-1516641396056-0ce60a35d714?auto=format&fit=crop&w=400&q=80', '#FFF3E0', '#E65100', 1 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Cuántos dedos hay en una mano?');
+INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
+SELECT '¿Qué animal ladra?', 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=400&q=80', '#EFEBE9', '#4E342E', 2 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué animal ladra?');
+INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
+SELECT '¿Qué letra es la primera del abecedario?', 'https://images.unsplash.com/photo-1509869175650-a1d979e25595?auto=format&fit=crop&w=400&q=80', '#EDE7F6', '#4A148C', 3 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué letra es la primera del abecedario?');
 
 INSERT INTO progreso_evaluacion (puntaje, medallas_obtenidas, fecha_evaluacion, reporte_generado, estudiante_id, leccion_id)
 SELECT 80, 2, '2026-05-10 10:00:00', 'Buen progreso inicial', 3, 1 WHERE NOT EXISTS (SELECT 1 FROM progreso_evaluacion WHERE estudiante_id = 3 AND leccion_id = 1 AND fecha_evaluacion = '2026-05-10 10:00:00');
@@ -117,6 +125,38 @@ INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, fla
 SELECT 'I', false, 'I de Iglesia', 3 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'I' AND flashcard_id = 3);
 INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
 SELECT 'A', true, '¡Excelente!', 3 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'A' AND flashcard_id = 3);
+
+-- Opciones para Flashcard 4 (¿Cuál es el color azul?)
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Rojo', false, 'No, es rojo', 4 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Rojo' AND flashcard_id = 4);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Azul', true, '¡Correcto! Es azul', 4 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Azul' AND flashcard_id = 4);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Verde', false, 'No, es verde', 4 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Verde' AND flashcard_id = 4);
+
+-- Opciones para Flashcard 5 (¿Cuántos dedos hay en una mano?)
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT '5', true, '¡Excelente! Son 5 dedos', 5 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '5' AND flashcard_id = 5);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT '10', false, 'No, 10 es en dos manos', 5 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '10' AND flashcard_id = 5);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT '3', false, 'Faltan dedos', 5 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '3' AND flashcard_id = 5);
+
+-- Opciones para Flashcard 6 (¿Qué animal ladra?)
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Gato', false, 'El gato hace miau', 6 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Gato' AND flashcard_id = 6);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Perro', true, '¡Correcto! El perro ladra (guau guau)', 6 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Perro' AND flashcard_id = 6);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Loro', false, 'El loro repite palabras', 6 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Loro' AND flashcard_id = 6);
+
+-- Opciones para Flashcard 7 (¿Qué letra es la primera del abecedario?)
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'A', true, '¡Correcto! Es la letra A', 7 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'A' AND flashcard_id = 7);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'Z', false, 'No, Z es la última', 7 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Z' AND flashcard_id = 7);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'M', false, 'No, es la letra A', 7 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'M' AND flashcard_id = 7);
 
 INSERT INTO resena_usuario (calificacion, comentario, fecha_publicacion, usuario_id)
 SELECT 5, 'Increíble herramienta para mis clases', '2026-05-10 12:00:00', 2 WHERE NOT EXISTS (SELECT 1 FROM resena_usuario WHERE usuario_id = 2 AND fecha_publicacion = '2026-05-10 12:00:00');

@@ -43,6 +43,10 @@ public class Usuario {
     @Column(name = "creado_por_id", insertable = false, updatable = false)
     private Long creadoPorId;
 
+    public Long getCreadoPorId() {
+        return creadoPor != null ? creadoPor.getId() : creadoPorId;
+    }
+
     @OneToMany(mappedBy = "creadoPor")
     @JsonIgnore
     private List<Usuario> hijos;

@@ -13,4 +13,7 @@ public interface FlashcardRepositorio extends JpaRepository<Flashcard, Long> {
 
     @Query("SELECT f.leccion.dificultad, COUNT(f) FROM Flashcard f WHERE f.leccion IS NOT NULL GROUP BY f.leccion.dificultad")
     List<Object[]> contarPorDificultad();
+
+    @Query("SELECT COUNT(f) FROM Flashcard f WHERE f.leccion.creador.id = :teacherId")
+    long contarFlashcardsPorMaestro(Long teacherId);
 }

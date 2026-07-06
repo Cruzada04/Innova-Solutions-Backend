@@ -9,4 +9,7 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsername(String username);
+
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(u) FROM Usuario u WHERE u.rol.id = 3 AND (u.creadoPor.id = :teacherId OR u.creadoPor.creadoPor.id = :teacherId)")
+    long contarAlumnosPorMaestro(Long teacherId);
 }

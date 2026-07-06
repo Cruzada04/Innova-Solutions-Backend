@@ -4,6 +4,9 @@ import com.upc.innovasolutionsbackend.entidades.Usuario;
 import com.upc.innovasolutionsbackend.entidades.Rol;
 import com.upc.innovasolutionsbackend.entidades.PlanSuscripcion;
 import com.upc.innovasolutionsbackend.repositorios.UsuarioRepositorio;
+import com.upc.innovasolutionsbackend.repositorios.LeccionCustomRepositorio;
+import com.upc.innovasolutionsbackend.repositorios.FlashcardRepositorio;
+import com.upc.innovasolutionsbackend.repositorios.TemaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,23 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private LeccionCustomRepositorio leccionCustomRepositorio;
+
+    @Autowired
+    private FlashcardRepositorio flashcardRepositorio;
+
+    @Autowired
+    private TemaRepositorio temaRepositorio;
+
+    public com.upc.innovasolutionsbackend.dtos.MaestroDashboardStatsDTO obtenerStatsMaestro(Long teacherId) {
+        long totalAlumnos = usuarioRepositorio.contarAlumnosPorMaestro(teacherId);
+        long totalLecciones = leccionCustomRepositorio.contarLeccionesPorMaestro(teacherId);
+        long totalFlashcards = flashcardRepositorio.contarFlashcardsPorMaestro(teacherId);
+        long totalTemas = temaRepositorio.count();
+        return new com.upc.innovasolutionsbackend.dtos.MaestroDashboardStatsDTO(totalAlumnos, totalTemas, totalLecciones, totalFlashcards);
+    }
+
     @Transactional
     public Usuario insertar(Usuario usuario) {
         if (usuarioRepositorio.findByUsername(usuario.getUsername()).isPresent()) {
@@ -29,6 +49,13 @@ public class UsuarioService {
         // Encriptar contraseña antes de guardar
         if (usuario.getContrasena() != null) {
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+        }
+
+        // Asignar plan por defecto (Plan Gratuito) si es nulo
+        if (usuario.getPlanSuscripcion() == null) {
+            PlanSuscripcion plan = new PlanSuscripcion();
+            plan.setId(1L);
+            usuario.setPlanSuscripcion(plan);
         }
 
 
@@ -58,19 +85,25 @@ public class UsuarioService {
                 throw new IllegalArgumentException("El usuario ya existe");
             }
 
+            // Copiar campos editables del DTO al objeto persistente existente
+            existente.setNombreCompleto(usuario.getNombreCompleto());
+            existente.setUsername(usuario.getUsername());
+            existente.setCorreoElectronico(usuario.getCorreoElectronico());
+            existente.setMetodoRegistro(usuario.getMetodoRegistro());
+            existente.setRol(usuario.getRol());
+            existente.setPlanSuscripcion(usuario.getPlanSuscripcion());
+
             // Si no se cambia la contraseña, el frontend manda "dummyPassword123"
-            if (usuario.getContrasena() == null || usuario.getContrasena().equals("dummyPassword123")) {
-                usuario.setContrasena(existente.getContrasena());
-            } else {
-            // Si es una nueva contraseña, la encriptamos
-                usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
-            }
-            // Sincronizar el rol ManyToOne con el Set ManyToMany para Spring Security
-            if (usuario.getRol() != null) {
-                usuario.setRoles(Collections.singleton(usuario.getRol()));
+            if (usuario.getContrasena() != null && !usuario.getContrasena().equals("dummyPassword123")) {
+                existente.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
             }
 
-            return usuarioRepositorio.save(usuario);
+            // Sincronizar el rol ManyToOne con el Set ManyToMany para Spring Security
+            if (existente.getRol() != null) {
+                existente.setRoles(Collections.singleton(existente.getRol()));
+            }
+
+            return usuarioRepositorio.save(existente);
         }
         return null;
     }

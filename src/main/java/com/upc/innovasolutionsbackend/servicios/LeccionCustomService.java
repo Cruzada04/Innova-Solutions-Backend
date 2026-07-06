@@ -30,8 +30,14 @@ public class LeccionCustomService {
 
     @Transactional
     public LeccionCustom actualizar(LeccionCustom leccion) {
-        if (leccionCustomRepositorio.existsById(leccion.getId())) {
-            return leccionCustomRepositorio.save(leccion);
+        LeccionCustom existente = leccionCustomRepositorio.findById(leccion.getId()).orElse(null);
+        if (existente != null) {
+            existente.setTitulo(leccion.getTitulo());
+            existente.setDificultad(leccion.getDificultad());
+            existente.setCreador(leccion.getCreador());
+            existente.setEstudiante(leccion.getEstudiante());
+            existente.setTema(leccion.getTema());
+            return leccionCustomRepositorio.save(existente);
         }
         return null;
     }
