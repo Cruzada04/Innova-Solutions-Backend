@@ -27,12 +27,12 @@ INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, 
 SELECT 'Josué Adrián', 'josue_admin', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'josue.adrian@upc.edu.pe', 'Email', 3, 1
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'josue_admin');
 
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
-SELECT 'Roberto Gómez', 'roberto_tutor', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'roberto.g@gmail.com', 'Google', 2, 2
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id, creado_por_id)
+SELECT 'Roberto Gómez', 'roberto_tutor', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'roberto.g@gmail.com', 'Google', 2, 2, (SELECT id FROM usuario WHERE username='josue_admin')
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'roberto_tutor');
 
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
-SELECT 'Lucía Méndez', 'lucia_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'lucia.m@outlook.com', 'Email', 1, 3
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id, creado_por_id)
+SELECT 'Lucía Méndez', 'lucia_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'lucia.m@outlook.com', 'Email', 1, 3, (SELECT id FROM usuario WHERE username='roberto_tutor')
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'lucia_estudiante');
 
 -- Tabla intermedia ManyToMany (usuario_roles)
@@ -83,11 +83,11 @@ SELECT 'Las vocales mágicas', 'Fácil', 1, 2, 3 WHERE NOT EXISTS (SELECT 1 FROM
 
 --- 6. FLASHCARDS Y PROGRESO
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
-SELECT '¿Cuántas manzanas ves?', 'https://placehold.co/300x200/FFEBEE/B71C1C?text=🍎+Manzanas', '#FFEBEE', '#B71C1C', 1 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Cuántas manzanas ves?');
+SELECT '¿Cuántas manzanas ves?', 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?auto=format&fit=crop&w=400&q=80', '#FFEBEE', '#B71C1C', 1 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Cuántas manzanas ves?');
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
-SELECT 'Identifica la cara de alegría', 'https://placehold.co/300x200/E3F2FD/0D47A1?text=😊+Alegría', '#E3F2FD', '#0D47A1', 2 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = 'Identifica la cara de alegría');
+SELECT 'Identifica la cara de alegría', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80', '#E3F2FD', '#0D47A1', 2 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = 'Identifica la cara de alegría');
 INSERT INTO flashcard (pregunta_texto, imagen_url, color_fondo, color_texto, leccion_id)
-SELECT '¿Qué vocal empieza con Avión?', 'https://placehold.co/300x200/F1F8E9/33691E?text=✈️+Avion', '#F1F8E9', '#33691E', 3 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué vocal empieza con Avión?');
+SELECT '¿Qué vocal empieza con Avión?', 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=400&q=80', '#F1F8E9', '#33691E', 3 WHERE NOT EXISTS (SELECT 1 FROM flashcard WHERE pregunta_texto = '¿Qué vocal empieza con Avión?');
 
 INSERT INTO progreso_evaluacion (puntaje, medallas_obtenidas, fecha_evaluacion, reporte_generado, estudiante_id, leccion_id)
 SELECT 80, 2, '2026-05-10 10:00:00', 'Buen progreso inicial', 3, 1 WHERE NOT EXISTS (SELECT 1 FROM progreso_evaluacion WHERE estudiante_id = 3 AND leccion_id = 1 AND fecha_evaluacion = '2026-05-10 10:00:00');
@@ -98,11 +98,25 @@ SELECT 60, 1, '2026-05-11 18:00:00', 'Requiere repasar vocales O y U', 2, 3 WHER
 
 --- 7. OPCIONES, RESEÑAS Y ELEMENTOS GUARDADOS
 INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
-SELECT '3 manzanas', true, '¡Correcto!', 1 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '3 manzanas' AND flashcard_id = 1);
+SELECT '1', true, '¡Correcto!', 1 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '1' AND flashcard_id = 1);
 INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
-SELECT 'Alegría', true, '¡Muy bien!', 2 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Alegría' AND flashcard_id = 2);
+SELECT '2', false, 'Faltan algunas', 1 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '2' AND flashcard_id = 1);
 INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
-SELECT 'Letra A', true, '¡Excelente!', 3 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'Letra A' AND flashcard_id = 3);
+SELECT '3', false, 'Son demasiadas', 1 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '3' AND flashcard_id = 1);
+
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT '😢', false, 'Esa es tristeza', 2 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '😢' AND flashcard_id = 2);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT '😡', false, 'Ese es enojo', 2 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '😡' AND flashcard_id = 2);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT '😊', true, '¡Correcto! Es alegría', 2 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = '😊' AND flashcard_id = 2);
+
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'E', false, 'E de Elefante', 3 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'E' AND flashcard_id = 3);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'I', false, 'I de Iglesia', 3 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'I' AND flashcard_id = 3);
+INSERT INTO opcion_respuesta (texto_opcion, es_correcta, feedback_respuesta, flashcard_id)
+SELECT 'A', true, '¡Excelente!', 3 WHERE NOT EXISTS (SELECT 1 FROM opcion_respuesta WHERE texto_opcion = 'A' AND flashcard_id = 3);
 
 INSERT INTO resena_usuario (calificacion, comentario, fecha_publicacion, usuario_id)
 SELECT 5, 'Increíble herramienta para mis clases', '2026-05-10 12:00:00', 2 WHERE NOT EXISTS (SELECT 1 FROM resena_usuario WHERE usuario_id = 2 AND fecha_publicacion = '2026-05-10 12:00:00');
@@ -119,15 +133,15 @@ INSERT INTO elemento_guardado (tipo_elemento, elemento_id, usuario_id)
 SELECT 'LECCION', 3, 2 WHERE NOT EXISTS (SELECT 1 FROM elemento_guardado WHERE tipo_elemento = 'LECCION' AND elemento_id = 3 AND usuario_id = 2);
 
 --- 8. EXTRA ALUMNOS MOCK
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
-SELECT 'María Gonzalez', 'maria_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'maria.g@gmail.com', 'Email', 1, 3
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id, creado_por_id)
+SELECT 'María Gonzalez', 'maria_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'maria.g@gmail.com', 'Email', 1, 3, (SELECT id FROM usuario WHERE username='roberto_tutor')
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'maria_estudiante');
 INSERT INTO usuario_roles (usuario_id, roles_id)
 SELECT (SELECT id FROM usuario WHERE username='maria_estudiante'), 3 
 WHERE NOT EXISTS (SELECT 1 FROM usuario_roles WHERE usuario_id = (SELECT id FROM usuario WHERE username='maria_estudiante') AND roles_id = 3);
 
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
-SELECT 'Pedro Lopez', 'pedro_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'pedro.l@gmail.com', 'Email', 1, 3
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id, creado_por_id)
+SELECT 'Pedro Lopez', 'pedro_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'pedro.l@gmail.com', 'Email', 1, 3, (SELECT id FROM usuario WHERE username='roberto_tutor')
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'pedro_estudiante');
 INSERT INTO usuario_roles (usuario_id, roles_id)
 SELECT (SELECT id FROM usuario WHERE username='pedro_estudiante'), 3 

@@ -40,6 +40,13 @@ public class UsuarioController {
             Rol rol = rolRepositorio.findById(usuarioRequestDTO.getRolId()).orElse(null);
             usuario.setRol(rol);
         }
+        
+        if (usuarioRequestDTO.getProfesorUsername() != null && !usuarioRequestDTO.getProfesorUsername().isEmpty()) {
+            Usuario profesor = usuarioRepositorio.findByUsername(usuarioRequestDTO.getProfesorUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("Profesor no encontrado: " + usuarioRequestDTO.getProfesorUsername()));
+            usuario.setCreadoPor(profesor);
+        }
+        
         usuario = usuarioService.insertar(usuario);
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
