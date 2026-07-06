@@ -24,7 +24,7 @@ public class CategoriaController {
 
     // 2. Se agrega @Valid para activar las validaciones del DTO al insertar
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public CategoriaResponseDTO insertar(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
         categoria = categoriaService.insertar(categoria);
@@ -46,7 +46,7 @@ public class CategoriaController {
 
     // 3. Se agrega @Valid para validar los datos también al actualizar
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public CategoriaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
         categoria.setId(id);
@@ -55,7 +55,7 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public void eliminar(@PathVariable Long id) {
         categoriaService.eliminar(id);
     }

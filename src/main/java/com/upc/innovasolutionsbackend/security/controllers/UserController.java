@@ -19,7 +19,7 @@ public class UserController {
     private PasswordEncoder bcrypt;
 
     @PostMapping("/user")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public void createUser(@RequestBody Usuario usuario ) {
         String bcryptPassword = bcrypt.encode(usuario.getContrasena());
         usuario.setContrasena(bcryptPassword);
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/rol")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public void createRol(@RequestBody Rol rol) {
            userService.grabar(rol);
     }

@@ -23,7 +23,7 @@ public class RelacionTutorEstudianteController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public RelacionTutorEstudianteResponseDTO insertar(@Valid @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
         RelacionTutorEstudiante relacion = modelMapper.map(relacionRequestDTO, RelacionTutorEstudiante.class);
         relacion = relacionService.insertar(relacion);
@@ -31,7 +31,7 @@ public class RelacionTutorEstudianteController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<RelacionTutorEstudianteResponseDTO> listar() {
         return relacionService.listar().stream()
                 .map(relacion -> modelMapper.map(relacion, RelacionTutorEstudianteResponseDTO.class))
@@ -39,14 +39,14 @@ public class RelacionTutorEstudianteController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public RelacionTutorEstudianteResponseDTO listarPorId(@PathVariable Long id) {
         RelacionTutorEstudiante relacion = relacionService.listarPorId(id);
         return modelMapper.map(relacion, RelacionTutorEstudianteResponseDTO.class);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public RelacionTutorEstudianteResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody RelacionTutorEstudianteRequestDTO relacionRequestDTO) {
         RelacionTutorEstudiante relacion = modelMapper.map(relacionRequestDTO, RelacionTutorEstudiante.class);
         relacion.setId(id);
@@ -55,7 +55,7 @@ public class RelacionTutorEstudianteController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public void eliminar(@PathVariable Long id) {
         relacionService.eliminar(id);
     }

@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public String adminEndpoint() {
         return "This is the admin endpoint, accessible only to users with ADMIN role.";
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'PROFESOR')")
     public String userEndpoint() {
         return "This is the user endpoint, accessible to users with USER or ADMIN role.";
     }

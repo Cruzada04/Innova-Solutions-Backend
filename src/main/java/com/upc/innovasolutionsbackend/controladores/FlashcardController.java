@@ -29,7 +29,7 @@ public class FlashcardController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public FlashcardResponseDTO insertar(@Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard = flashcardService.insertar(flashcard);
@@ -37,7 +37,7 @@ public class FlashcardController {
     }
 
     @PostMapping("/con-opciones")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public FlashcardResponseDTO insertarConOpciones(@Valid @RequestBody FlashcardConOpcionesRequestDTO dto) {
 
         Flashcard flashcard = new Flashcard();
@@ -90,7 +90,7 @@ public class FlashcardController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public FlashcardResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
         Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
         flashcard.setId(id);
@@ -99,7 +99,7 @@ public class FlashcardController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public void eliminar(@PathVariable Long id) {
         flashcardService.eliminar(id);
     }
@@ -108,7 +108,7 @@ public class FlashcardController {
 
 
     @GetMapping("/reporte/dificultad")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<FlashcardReporteDTO> reportePorDificultad() {
         return flashcardService.reportePorDificultad();
     }

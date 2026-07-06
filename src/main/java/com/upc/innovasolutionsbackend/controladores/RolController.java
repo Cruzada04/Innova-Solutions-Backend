@@ -23,7 +23,7 @@ public class RolController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public RolResponseDTO insertar(@Valid @RequestBody RolRequestDTO rolRequestDTO) {
         Rol rol = modelMapper.map(rolRequestDTO, Rol.class);
         rol = rolService.insertar(rol);
@@ -44,7 +44,7 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public RolResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody RolRequestDTO rolRequestDTO) {
         Rol rol = modelMapper.map(rolRequestDTO, Rol.class);
         rol.setId(id);
@@ -53,7 +53,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public void eliminar(@PathVariable Long id) {
         rolService.eliminar(id);
     }

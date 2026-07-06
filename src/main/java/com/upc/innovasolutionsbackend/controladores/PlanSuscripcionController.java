@@ -23,7 +23,7 @@ public class PlanSuscripcionController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public PlanSuscripcionResponseDTO insertar(@Valid @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
         PlanSuscripcion plan = modelMapper.map(planRequestDTO, PlanSuscripcion.class);
         plan = planService.insertar(plan);
@@ -44,7 +44,7 @@ public class PlanSuscripcionController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public PlanSuscripcionResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody PlanSuscripcionRequestDTO planRequestDTO) {
         PlanSuscripcion plan = modelMapper.map(planRequestDTO, PlanSuscripcion.class);
         plan.setId(id);
@@ -53,7 +53,7 @@ public class PlanSuscripcionController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public void eliminar(@PathVariable Long id) {
         planService.eliminar(id);
     }

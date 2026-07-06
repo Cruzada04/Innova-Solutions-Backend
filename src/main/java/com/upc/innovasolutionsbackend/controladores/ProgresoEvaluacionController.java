@@ -32,7 +32,7 @@ public class ProgresoEvaluacionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<ProgresoEvaluacionResponseDTO> listar() {
         return progresoService.listar().stream()
                 .map(progreso -> modelMapper.map(progreso, ProgresoEvaluacionResponseDTO.class))
@@ -40,7 +40,7 @@ public class ProgresoEvaluacionController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public ProgresoEvaluacionResponseDTO listarPorId(@PathVariable Long id) {
         ProgresoEvaluacion progreso = progresoService.listarPorId(id);
         return modelMapper.map(progreso, ProgresoEvaluacionResponseDTO.class);
@@ -62,7 +62,7 @@ public class ProgresoEvaluacionController {
 
 
     @GetMapping("/reporte/pormes")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<ProgresoReporteDTO> reportePorMes() {
         return progresoService.reportePorMes();
     }
