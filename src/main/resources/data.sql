@@ -1,3 +1,7 @@
+--- 0. LIMPIEZA DE ROLES DUPLICADOS (si existe ROLE_ESTUDIANTE de schemas anteriores)
+DELETE FROM usuario_roles WHERE roles_id IN (SELECT id FROM roles WHERE name NOT IN ('ROLE_PROFESOR', 'ROLE_PADRE', 'ROLE_ALUMNO'));
+DELETE FROM roles WHERE name NOT IN ('ROLE_PROFESOR', 'ROLE_PADRE', 'ROLE_ALUMNO');
+
 --- 1. TABLAS INDEPENDIENTES
 INSERT INTO roles (name)
 SELECT 'ROLE_PROFESOR' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'ROLE_PROFESOR');
@@ -22,16 +26,16 @@ SELECT 'Habilidades Sociales', 'https://cdn-icons-png.flaticon.com/512/1189/1189
 
 --- 2. USUARIOS Y TEMAS
 -- Nota: Las contraseñas están encriptadas con BCrypt. Todas son: password123
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id)
-SELECT 'Josué Adrián', 'josue_admin', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'josue.adrian@upc.edu.pe', 'Email', 3 
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
+SELECT 'Josué Adrián', 'josue_admin', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'josue.adrian@upc.edu.pe', 'Email', 3, 1
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'josue_admin');
 
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id)
-SELECT 'Roberto Gómez', 'roberto_tutor', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'roberto.g@gmail.com', 'Google', 2
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
+SELECT 'Roberto Gómez', 'roberto_tutor', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'roberto.g@gmail.com', 'Google', 2, 2
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'roberto_tutor');
 
-INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id)
-SELECT 'Lucía Méndez', 'lucia_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'lucia.m@outlook.com', 'Email', 1
+INSERT INTO usuario (nombre_completo, username, contrasena, correo_electronico, metodo_registro, plan_id, rol_id)
+SELECT 'Lucía Méndez', 'lucia_estudiante', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'lucia.m@outlook.com', 'Email', 1, 3
 WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'lucia_estudiante');
 
 -- Tabla intermedia ManyToMany (usuario_roles)

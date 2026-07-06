@@ -58,6 +58,9 @@ public class AuthController {
 
         userRepository.findByUsername(authRequest.getUsername()).ifPresent(user -> {
             authResponseDTO.setId(user.getId());
+            if (user.getRol() != null) {
+                authResponseDTO.setRolId(user.getRol().getId());
+            }
         });
 
         return ResponseEntity.ok().headers(responseHeaders).body(authResponseDTO);
