@@ -34,7 +34,6 @@ public class UsuarioController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar datos críticos como el email y la contraseña al crear
     public UsuarioResponseDTO insertar(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario = usuarioService.insertar(usuario);
@@ -43,25 +42,11 @@ public class UsuarioController {
 
     @PostMapping("/registro-alumno")
     @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
-    public UsuarioResponseDTO registrarAlumno(@Valid @RequestBody RegistroAlumnoRequestDTO dto, Authentication auth) {
-        String usernameParent = auth.getName();
-        Usuario usuario = usuarioRepositorio.findByUsername(usernameParent)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        Rol rolAlumno = rolRepositorio.findById(3L)
-                .orElseThrow(() -> new RuntimeException("Rol ALUMNO no encontrado"));
-
-        Usuario alumno = new Usuario();
-        alumno.setUsername(dto.getUsername());
-        alumno.setContrasena(dto.getPin());
-        alumno.setNombreCompleto(dto.getUsername());
-        alumno.setCorreoElectronico(dto.getUsername() + "@student.innova.com");
-        alumno.setMetodoRegistro("PADRE");
-        alumno.setRol(rolAlumno);
-        alumno.setCreadoPor(usuario);
-
-        alumno = usuarioService.insertar(alumno);
-        return modelMapper.map(alumno, UsuarioResponseDTO.class);
+    public UsuarioResponseDTO registrarAlumno(
+            @Valid @RequestBody RegistroAlumnoRequestDTO request,
+            Authentication auth) {
+        Usuario estudiante = usuarioService.registrarAlumno(request, auth.getName());
+        return modelMapper.map(estudiante, UsuarioResponseDTO.class);
     }
 
     @GetMapping
@@ -91,5 +76,10 @@ public class UsuarioController {
     @PreAuthorize("hasRole('PROFESOR')")
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminar(id);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public org.springframework.http.ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("message", ex.getMessage()));
     }
 }

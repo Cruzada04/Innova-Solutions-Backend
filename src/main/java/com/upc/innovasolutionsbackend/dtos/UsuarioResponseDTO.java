@@ -13,4 +13,5 @@ public class UsuarioResponseDTO {
     private String correoElectronico;
     private String metodoRegistro;
     private RolResponseDTO rol;
+    private Long creadoPorId;
 }

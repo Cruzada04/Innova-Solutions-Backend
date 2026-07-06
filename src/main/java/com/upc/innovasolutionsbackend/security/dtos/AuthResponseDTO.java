@@ -7,4 +7,5 @@ import java.util.Set;
 public class AuthResponseDTO {
     private String jwt;
     private Set<String> roles;
+    private Long id;
 }
