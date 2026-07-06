@@ -55,6 +55,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            System.out.println(">>> AUTHORITIES for " + username + ": " + userDetails.getAuthorities());
+            System.out.println(">>> JWT VALID: " + jwtUtil.validateToken(jwt, userDetails));
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
@@ -63,7 +65,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                //siempre por ser stateless, se debe establecer el contexto de seguridad
+                System.out.println(">>> AUTH SET for " + username + " with authorities: " + userDetails.getAuthorities());
+            } else {
+                System.out.println(">>> JWT VALIDATION FAILED for " + username);
             }
         }
         chain.doFilter(request, response);//ya va al controller o al siguiente filtro en la cadena
