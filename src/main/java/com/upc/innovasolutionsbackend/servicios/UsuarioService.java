@@ -105,6 +105,8 @@ public class UsuarioService {
         plan.setId(1L);
         estudiante.setPlanSuscripcion(plan);
         
-        return usuarioRepositorio.save(estudiante);
+        estudiante = usuarioRepositorio.save(estudiante);
+        estudiante.setCreadoPorId(tutor.getId());
+        return estudiante;
     }
 }
