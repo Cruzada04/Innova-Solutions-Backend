@@ -34,8 +34,14 @@ public class FlashcardService {
 
     @Transactional
     public Flashcard actualizar(Flashcard flashcard) {
-        if (flashcardRepositorio.existsById(flashcard.getId())) {
-            return flashcardRepositorio.save(flashcard);
+        Flashcard existente = flashcardRepositorio.findById(flashcard.getId()).orElse(null);
+        if (existente != null) {
+            existente.setPreguntaTexto(flashcard.getPreguntaTexto());
+            existente.setImagenUrl(flashcard.getImagenUrl());
+            existente.setColorFondo(flashcard.getColorFondo());
+            existente.setColorTexto(flashcard.getColorTexto());
+            existente.setLeccion(flashcard.getLeccion());
+            return flashcardRepositorio.save(existente);
         }
         return null;
     }

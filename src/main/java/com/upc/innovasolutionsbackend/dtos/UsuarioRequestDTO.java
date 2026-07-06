@@ -25,7 +25,7 @@ public class UsuarioRequestDTO {
     private String username;
 
     @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    @Size(min = 4, message = "La contraseña debe tener al menos 4 caracteres")
     private String contrasena;
 
     @NotBlank(message = "El método de registro es obligatorio")
@@ -34,7 +34,6 @@ public class UsuarioRequestDTO {
     @NotNull(message = "El ID del rol es obligatorio")
     private Long rolId;
 
-    @NotNull(message = "El ID del plan de suscripción es obligatorio")
     private Long planSuscripcionId;
 
     private String profesorUsername;

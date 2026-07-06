@@ -60,6 +60,14 @@ public class UsuarioController {
         return modelMapper.map(estudiante, UsuarioResponseDTO.class);
     }
 
+    @GetMapping("/maestro/dashboard-stats")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
+    public com.upc.innovasolutionsbackend.dtos.MaestroDashboardStatsDTO dashboardStats(org.springframework.security.core.Authentication auth) {
+        Usuario user = usuarioRepositorio.findByUsername(auth.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        return usuarioService.obtenerStatsMaestro(user.getId());
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<UsuarioResponseDTO> listar() {
