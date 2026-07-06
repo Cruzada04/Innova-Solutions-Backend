@@ -60,12 +60,24 @@ public class FlashcardService {
 
     @Transactional
     public Flashcard actualizarConOpciones(Flashcard flashcard, List<OpcionRespuesta> opciones) {
-        if (flashcardRepositorio.existsById(flashcard.getId())) {
-            opcionRespuestaRepositorio.deleteByFlashcardId(flashcard.getId());
-            Flashcard guardada = flashcardRepositorio.save(flashcard);
-            opciones.forEach(opcion -> opcion.setFlashcard(guardada));
-            opcionRespuestaRepositorio.saveAll(opciones);
-            return guardada;
+        Flashcard existente = flashcardRepositorio.findById(flashcard.getId()).orElse(null);
+        if (existente != null) {
+            existente.setPreguntaTexto(flashcard.getPreguntaTexto());
+            existente.setImagenUrl(flashcard.getImagenUrl());
+            existente.setColorFondo(flashcard.getColorFondo());
+            existente.setColorTexto(flashcard.getColorTexto());
+            existente.setLeccion(flashcard.getLeccion());
+
+            // Limpiar las opciones anteriores
+            existente.getOpciones().clear();
+            flashcardRepositorio.saveAndFlush(existente);
+
+            // Agregar las nuevas opciones
+            for (OpcionRespuesta opcion : opciones) {
+                opcion.setFlashcard(existente);
+                existente.getOpciones().add(opcion);
+            }
+            return flashcardRepositorio.save(existente);
         }
         return null;
     }

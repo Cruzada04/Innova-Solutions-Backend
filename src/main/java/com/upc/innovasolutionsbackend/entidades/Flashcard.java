@@ -23,6 +23,6 @@ public class Flashcard {
     @JoinColumn(name = "leccion_id")
     private LeccionCustom leccion;
 
-    @OneToMany(mappedBy = "flashcard", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "flashcard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OpcionRespuesta> opciones;
 }
