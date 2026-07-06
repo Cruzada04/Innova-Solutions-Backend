@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OpcionRespuestaRepositorio extends JpaRepository<OpcionRespuesta, Long> {
+    void deleteByFlashcardId(Long flashcardId);
 }

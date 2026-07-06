@@ -59,6 +59,18 @@ public class FlashcardService {
     }
 
     @Transactional
+    public Flashcard actualizarConOpciones(Flashcard flashcard, List<OpcionRespuesta> opciones) {
+        if (flashcardRepositorio.existsById(flashcard.getId())) {
+            opcionRespuestaRepositorio.deleteByFlashcardId(flashcard.getId());
+            Flashcard guardada = flashcardRepositorio.save(flashcard);
+            opciones.forEach(opcion -> opcion.setFlashcard(guardada));
+            opcionRespuestaRepositorio.saveAll(opciones);
+            return guardada;
+        }
+        return null;
+    }
+
+    @Transactional
     public void eliminar(Long id) {
         flashcardRepositorio.deleteById(id);
     }

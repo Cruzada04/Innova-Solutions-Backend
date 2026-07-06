@@ -91,11 +91,30 @@ public class FlashcardController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
-    public FlashcardResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody FlashcardRequestDTO flashcardRequestDTO) {
-        Flashcard flashcard = modelMapper.map(flashcardRequestDTO, Flashcard.class);
+    public FlashcardResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody FlashcardConOpcionesRequestDTO dto) {
+        Flashcard flashcard = new Flashcard();
         flashcard.setId(id);
-        flashcard = flashcardService.actualizar(flashcard);
-        return modelMapper.map(flashcard, FlashcardResponseDTO.class);
+        flashcard.setPreguntaTexto(dto.getPreguntaTexto());
+        flashcard.setImagenUrl(dto.getImagenUrl());
+        flashcard.setColorFondo(dto.getColorFondo());
+        flashcard.setColorTexto(dto.getColorTexto());
+
+        LeccionCustom leccion = new LeccionCustom();
+        leccion.setId(dto.getLeccionId());
+        flashcard.setLeccion(leccion);
+
+        List<OpcionRespuesta> opciones = dto.getOpciones().stream()
+                .map(itemDto -> {
+                    OpcionRespuesta opcion = new OpcionRespuesta();
+                    opcion.setTextoOpcion(itemDto.getTextoOpcion());
+                    opcion.setEsCorrecta(itemDto.getEsCorrecta());
+                    opcion.setFeedbackRespuesta(itemDto.getFeedbackRespuesta());
+                    return opcion;
+                })
+                .collect(Collectors.toList());
+
+        Flashcard guardada = flashcardService.actualizarConOpciones(flashcard, opciones);
+        return toDto(guardada);
     }
 
     @DeleteMapping("/{id}")
