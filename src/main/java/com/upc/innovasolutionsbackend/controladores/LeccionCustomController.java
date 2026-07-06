@@ -24,7 +24,7 @@ public class LeccionCustomController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public LeccionCustomResponseDTO insertar(@Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
         LeccionCustom leccion = modelMapper.map(leccionRequestDTO, LeccionCustom.class);
         leccion = leccionCustomService.insertar(leccion);
@@ -45,7 +45,7 @@ public class LeccionCustomController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public LeccionCustomResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody LeccionCustomRequestDTO leccionRequestDTO) {
         LeccionCustom leccion = modelMapper.map(leccionRequestDTO, LeccionCustom.class);
         leccion.setId(id);
@@ -54,14 +54,14 @@ public class LeccionCustomController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public void eliminar(@PathVariable Long id) {
         leccionCustomService.eliminar(id);
     }
 
 
     @GetMapping("/reporte/dificultad")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<FlashcardReporteDTO> reportePorDificultad() {
         return leccionCustomService.reportePorDificultad();
     }

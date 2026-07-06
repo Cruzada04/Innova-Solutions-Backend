@@ -1,13 +1,18 @@
 package com.upc.innovasolutionsbackend.controladores;
 
+import com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.UsuarioRequestDTO;
 import com.upc.innovasolutionsbackend.dtos.UsuarioResponseDTO;
+import com.upc.innovasolutionsbackend.entidades.Rol;
 import com.upc.innovasolutionsbackend.entidades.Usuario;
+import com.upc.innovasolutionsbackend.repositorios.RolRepositorio;
+import com.upc.innovasolutionsbackend.repositorios.UsuarioRepositorio;
 import com.upc.innovasolutionsbackend.servicios.UsuarioService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,18 +25,32 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @Autowired
+    private RolRepositorio rolRepositorio;
+
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @PostMapping
-    // Se agrega @Valid para validar datos críticos como el email y la contraseña al crear
     public UsuarioResponseDTO insertar(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario = usuarioService.insertar(usuario);
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
 
+    @PostMapping("/registro-alumno")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
+    public UsuarioResponseDTO registrarAlumno(
+            @Valid @RequestBody RegistroAlumnoRequestDTO request,
+            Authentication auth) {
+        Usuario estudiante = usuarioService.registrarAlumno(request, auth.getName());
+        return modelMapper.map(estudiante, UsuarioResponseDTO.class);
+    }
+
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public List<UsuarioResponseDTO> listar() {
         return usuarioService.listar().stream()
                 .map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
@@ -45,7 +64,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public UsuarioResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioRequestDTO, Usuario.class);
         usuario.setId(id);
@@ -54,18 +73,9 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('PROFESOR')")
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminar(id);
-    }
-
-    @PostMapping("/registro-alumno")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
-    public UsuarioResponseDTO registrarAlumno(
-            @jakarta.validation.Valid @RequestBody com.upc.innovasolutionsbackend.dtos.RegistroAlumnoRequestDTO request,
-            org.springframework.security.core.Authentication auth) {
-        Usuario estudiante = usuarioService.registrarAlumno(request, auth.getName());
-        return modelMapper.map(estudiante, UsuarioResponseDTO.class);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

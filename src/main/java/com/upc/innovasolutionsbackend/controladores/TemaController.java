@@ -23,7 +23,7 @@ public class TemaController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public TemaResponseDTO insertar(@Valid @RequestBody TemaRequestDTO temaRequestDTO) {
         Tema tema = modelMapper.map(temaRequestDTO, Tema.class);
         tema = temaService.insertar(tema);
@@ -44,7 +44,7 @@ public class TemaController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public TemaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody TemaRequestDTO temaRequestDTO) {
         Tema tema = modelMapper.map(temaRequestDTO, Tema.class);
         tema.setId(id);
@@ -53,7 +53,7 @@ public class TemaController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public void eliminar(@PathVariable Long id) {
         temaService.eliminar(id);
     }

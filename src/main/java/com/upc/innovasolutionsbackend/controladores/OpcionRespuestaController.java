@@ -24,7 +24,7 @@ public class OpcionRespuestaController {
     private ModelMapper modelMapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public OpcionRespuestaResponseDTO insertar(@Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
         OpcionRespuesta opcion = new OpcionRespuesta();
         opcion.setTextoOpcion(opcionRequestDTO.getTextoOpcion());
@@ -53,7 +53,7 @@ public class OpcionRespuestaController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public OpcionRespuestaResponseDTO actualizar(@PathVariable Long id, @Valid @RequestBody OpcionRespuestaRequestDTO opcionRequestDTO) {
         OpcionRespuesta opcion = modelMapper.map(opcionRequestDTO, OpcionRespuesta.class);
         opcion.setId(id);
@@ -62,7 +62,7 @@ public class OpcionRespuestaController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TUTOR')")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'PADRE')")
     public void eliminar(@PathVariable Long id) {
         opcionService.eliminar(id);
     }
