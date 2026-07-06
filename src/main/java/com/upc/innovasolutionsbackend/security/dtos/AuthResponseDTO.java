@@ -8,4 +8,5 @@ public class AuthResponseDTO {
     private String jwt;
     private Set<String> roles;
     private Long id;
+    private Long rolId;
 }
