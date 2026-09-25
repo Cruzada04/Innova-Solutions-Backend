@@ -1,24 +1,90 @@
-# Innova-Solutions-Backend
+Innova Solutions · Backend
 
-## Descripción del Proyecto
-**InnovaSolutions** es una plataforma innovadora desarrollada por estudiantes de la Facultad de Ingeniería de la UPC. Nuestro compromiso se centra en abordar las necesidades de una parte significativa y desatendida de la sociedad: los niños de la comunidad autista que enfrentan desafíos constantes en su proceso educativo diario.
+API REST de InnovaSolutions, una plataforma educativa basada en flashcards para apoyar el aprendizaje de niños menores de 10 años dentro del espectro autista. Permite que docentes y tutores creen flashcards con imagen, colores y opciones de respuesta, las organicen en lecciones y temas, y sigan el progreso de cada estudiante.
 
-## Características Principales
-- **Flashcards potenciadas por IA:** Genera contenido visualmente atractivo y adaptado a las necesidades específicas de cada niño.
-- **Aprendizaje Adaptativo:** Simplifica tanto el proceso de enseñanza como el de aprendizaje para el niño y el docente.
-- **Experiencia Personalizada:** Se enfoca en los requerimientos únicos de aprendizaje de la comunidad autista.
+Proyecto académico desarrollado por el Grupo 06 (Facultad de Ingeniería, UPC), curso Arquitectura de Aplicaciones Web.
 
-## Misión
-Facilitar el proceso de aprendizaje de niños menores de 10 años que padecen autismo a través de una plataforma didáctica de fácil uso, utilizando reconocidas "Flashcards" potenciadas por un sistema generativo de inteligencia artificial.
+Frontend: Innova-Solutions-FrontEnd
 
-## Visión
-Nos proyectamos como líderes globales en el ámbito de la educación para niños autistas menores de 10 años, transformando sus vidas a través de la implementación de técnicas de aprendizaje innovadoras.
+Funcionalidades
+Registro e inicio de sesión con autenticación JWT (Spring Security).
+Gestión de usuarios, roles y relaciones tutor–estudiante (incluye registro de alumnos).
+Flashcards con texto, imagen, colores de fondo y de texto, y opciones de respuesta (creación de la flashcard con sus opciones en una sola petición).
+Organización por categorías, temas y lecciones personalizadas.
+Progreso de evaluaciones con puntaje y medallas.
+Elementos guardados, reseñas, perfiles de aprendizaje, configuraciones y planes de suscripción.
+Subida de imágenes.
+Reportes: progreso por mes, flashcards y lecciones por dificultad, y estadísticas del dashboard del docente.
+Documentación interactiva de la API con Swagger UI (OpenAPI).
+Tecnologías
+Área	Herramientas
+Lenguaje y framework	Java 17, Spring Boot 3.5
+Persistencia	Spring Data JPA, Hibernate, PostgreSQL
+Seguridad	Spring Security, JWT (jjwt)
+Documentación	springdoc-openapi (Swagger UI)
+Otros	Lombok, ModelMapper, Bean Validation
+Despliegue	Docker (multi-stage build), Docker Compose
+Arquitectura
 
-## Empezando
-1. Clonar el repositorio.
-2. Instalar las dependencias.
-3. Configurar las variables de entorno.
-4. Ejecutar el servidor de desarrollo.
+Arquitectura en capas, con paquetes por responsabilidad en com.upc.innovasolutionsbackend:
 
----
-*Desarrollado por el Grupo 06 - Curso: Arquitectura de Aplicaciones Web*
+controladores/   Endpoints REST
+servicios/       Lógica de negocio
+repositorios/    Acceso a datos (Spring Data JPA)
+entidades/       Modelo de dominio (JPA)
+dtos/            Objetos de petición y respuesta
+security/        JWT, filtros y configuración de seguridad
+config/          Configuración web y ModelMapper
+Cómo ejecutarlo
+Opción 1: Docker Compose (recomendada)
+
+Requiere Docker. Levanta PostgreSQL y la API.
+
+bash
+git clone https://github.com/Cruzada04/Innova-Solutions-Backend.git
+cd Innova-Solutions-Backend
+docker compose up --build
+
+La API queda en http://localhost:8080.
+
+Opción 2: Local con Maven
+
+Requisitos: Java 17 y PostgreSQL con una base de datos llamada db_innovasolutions.
+
+bash
+./mvnw spring-boot:run
+Variables de entorno
+Variable	Descripción	Valor por defecto
+SPRING_DATASOURCE_URL	URL de PostgreSQL	jdbc:postgresql://localhost:5432/db_innovasolutions
+SPRING_DATASOURCE_USERNAME	Usuario de la base de datos	postgres
+SPRING_DATASOURCE_PASSWORD	Contraseña de la base de datos	(definir)
+JWT_SECRET	Clave para firmar los tokens JWT	(definir una propia)
+IP_FRONTEND	Origen permitido del frontend	http://localhost:4200
+
+Usa valores propios para JWT_SECRET y la contraseña. No los subas al repositorio.
+
+Documentación de la API
+
+Con la aplicación en ejecución:
+
+Swagger UI: http://localhost:8080/swagger-ui/index.html
+OpenAPI (JSON): http://localhost:8080/v3/api-docs
+
+Para consumir los endpoints protegidos, inicia sesión en POST /api/authenticate y envía el token en el encabezado Authorization: Bearer <token>.
+
+Recursos principales
+Recurso	Ruta base
+Autenticación	/api/authenticate
+Usuarios	/api/usuarios (incluye /registro-alumno y /maestro/dashboard-stats)
+Roles	/api/roles
+Flashcards	/api/flashcards (incluye /con-opciones y /reporte/dificultad)
+Temas	/api/temas
+Lecciones	/api/lecciones-custom (incluye /reporte/dificultad)
+Progreso de evaluaciones	/api/progresos-evaluacion (incluye /reporte/pormes)
+Elementos guardados	/api/elementos-guardados
+Relaciones tutor–estudiante	/api/relaciones-tutor-estudiante
+Perfiles de aprendizaje	/api/perfiles-aprendizaje
+Reseñas	/api/resenas
+Configuraciones	/api/configuraciones
+Planes de suscripción	/api/planes-suscripcion
+Subida de archivos	/api/upload
