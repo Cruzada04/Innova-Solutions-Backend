@@ -55,6 +55,4 @@ npm run build   # compilación de producción en dist/
 npm test        # pruebas unitarias
 ```
 
-## Equipo
 
-Grupo 06, UPC. Mi participación: [describe tu rol, por ejemplo: pantallas de creación de flashcards, servicios HTTP y guard de autenticación].
